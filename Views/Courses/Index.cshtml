@@ -1,0 +1,185 @@
+@model StudentEnrollmentSystem.Models.ViewModels.CourseListViewModel
+
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+            <h1 class="text-3xl font-semibold text-gray-900">Available Courses</h1>
+            <p class="mt-2 text-sm text-gray-700">Browse our available courses and enroll in the ones that match your interests.</p>
+        </div>
+    </div>
+
+    <div class="mt-8 bg-white shadow-sm rounded-lg">
+        <!-- Filters -->
+        <div class="border-b border-gray-200 p-6">
+            <form method="get" class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-4">
+                <div class="flex-1">
+                    <label for="searchTerm" class="sr-only">Search</label>
+                    <div class="relative rounded-md shadow-sm">
+                        <input type="text" 
+                               name="searchTerm" 
+                               id="searchTerm"
+                               value="@Model.SearchTerm"
+                               class="form-input block w-full pr-10 sm:text-sm" 
+                               placeholder="Search courses...">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sm:w-40">
+                    <label for="creditFilter" class="sr-only">Credits</label>
+                    <select id="creditFilter" 
+                            name="creditFilter" 
+                            class="form-input block w-full sm:text-sm">
+                        <option value="">All Credits</option>
+                        @for (int i = 1; i <= 6; i++)
+                        {
+                            <option value="@i" selected="@(Model.CreditFilter == i)">@i Credits</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="sm:w-48">
+                    <label for="maxFee" class="sr-only">Max Fee</label>
+                    <input type="number" 
+                           id="maxFee" 
+                           name="maxFee" 
+                           value="@Model.MaxFee"
+                           class="form-input block w-full sm:text-sm" 
+                           placeholder="Max Fee">
+                </div>
+
+                <div class="flex items-center">
+                    <input type="checkbox" 
+                           id="showAvailableOnly" 
+                           name="showAvailableOnly" 
+                           value="true"
+                           @(Model.ShowAvailableOnly ? "checked" : "")
+                           class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                    <label for="showAvailableOnly" class="ml-2 block text-sm text-gray-900">
+                        Available Only
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    Apply Filters
+                </button>
+            </form>
+        </div>
+
+        <!-- Course List -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <a asp-action="Index" asp-route-sortOrder="@(Model.SortOrder == "code" ? "code_desc" : "code")" class="hover:text-gray-900">
+                                Course Code
+                                @if (Model.SortOrder == "code")
+                                {
+                                    <span>↑</span>
+                                }
+                                else if (Model.SortOrder == "code_desc")
+                                {
+                                    <span>↓</span>
+                                }
+                            </a>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <a asp-action="Index" asp-route-sortOrder="@(Model.SortOrder == "name" ? "name_desc" : "name")" class="hover:text-gray-900">
+                                Name
+                                @if (Model.SortOrder == "name")
+                                {
+                                    <span>↑</span>
+                                }
+                                else if (Model.SortOrder == "name_desc")
+                                {
+                                    <span>↓</span>
+                                }
+                            </a>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <a asp-action="Index" asp-route-sortOrder="@(Model.SortOrder == "credits" ? "credits_desc" : "credits")" class="hover:text-gray-900">
+                                Credits
+                                @if (Model.SortOrder == "credits")
+                                {
+                                    <span>↑</span>
+                                }
+                                else if (Model.SortOrder == "credits_desc")
+                                {
+                                    <span>↓</span>
+                                }
+                            </a>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Available Seats
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <a asp-action="Index" asp-route-sortOrder="@(Model.SortOrder == "fee" ? "fee_desc" : "fee")" class="hover:text-gray-900">
+                                Fee
+                                @if (Model.SortOrder == "fee")
+                                {
+                                    <span>↑</span>
+                                }
+                                else if (Model.SortOrder == "fee_desc")
+                                {
+                                    <span>↓</span>
+                                }
+                            </a>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach (var course in Model.Courses)
+                    {
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                @course.CourseCode
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">
+                                @course.Name
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @course.Credits
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @if (course.AvailableSeats > 0)
+                                {
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        @course.AvailableSeats available
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        Full
+                                    </span>
+                                }
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @course.Fee.ToString("C")
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a asp-action="Details" asp-route-id="@course.Id" class="text-primary-600 hover:text-primary-900 mr-4">Details</a>
+                                @if (course.AvailableSeats > 0)
+                                {
+                                    <a asp-action="Enroll" asp-route-id="@course.Id" class="text-primary-600 hover:text-primary-900">Enroll</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="hidden sm:ml-6 sm:flex sm:items-center">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="relative" x-data="{ isOpen: false }">
+            <button type="button" 
+                    class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" 
+                    x-on:click="isOpen = !isOpen"
+                    aria-expanded="false"
+                    aria-haspopup="true">
+                <span class="sr-only">Open user menu</span>
+                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-primary-500">
+                    <span class="text-sm font-medium leading-none text-white">
+                        @User.Identity?.Name?.Substring(0,1).ToUpper()
+                    </span>
+                </span>
+            </button>
+            <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" 
+                 role="menu" 
+                 aria-orientation="vertical" 
+                 aria-labelledby="user-menu-button" 
+                 tabindex="-1"
+                 x-show="isOpen"
+                 x-cloak
+                 x-on:click.away="isOpen = false">
+                <a asp-controller="Account" asp-action="Profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</a>
+                <a asp-controller="Enrollment" asp-action="History" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Enrollment History</a>
+                <a asp-controller="Payment" asp-action="History" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Payment History</a>
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</button>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="flex space-x-4">
+            <a asp-controller="Account" asp-action="Login" class="btn-primary">Sign in</a>
+            <a asp-controller="Account" asp-action="Register" class="btn-secondary">Register</a>
+        </div>
+    }
+</div>
+
+<!-- Mobile menu -->
+<div class="sm:hidden" role="dialog" aria-modal="true">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="pt-4 pb-3 border-t border-gray-200">
+            <div class="flex items-center px-4">
+                <div class="flex-shrink-0">
+                    <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-primary-500">
+                        <span class="text-sm font-medium leading-none text-white">
+                            @User.Identity?.Name?.Substring(0,1).ToUpper()
+                        </span>
+                    </span>
+                </div>
+                <div class="ml-3">
+                    <div class="text-base font-medium text-gray-800">@User.Identity?.Name</div>
+                </div>
+            </div>
+            <div class="mt-3 space-y-1">
+                <a asp-controller="Account" asp-action="Profile" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Your Profile</a>
+                <a asp-controller="Enrollment" asp-action="History" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Enrollment History</a>
+                <a asp-controller="Payment" asp-action="History" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Payment History</a>
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Sign out</button>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="pt-4 pb-3 border-t border-gray-200">
+            <div class="space-y-1">
+                <a asp-controller="Account" asp-action="Login" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Sign in</a>
+                <a asp-controller="Account" asp-action="Register" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Register</a>
+            </div>
+        </div>
+    }
+</div>

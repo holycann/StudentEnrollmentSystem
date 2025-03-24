@@ -1,0 +1,167 @@
+@model List<StudentEnrollmentSystem.Models.ViewModels.EnquiryViewModel>
+@using StudentEnrollmentSystem.Models.Enums
+
+@{
+    ViewData["Title"] = "Enquiry History";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+            <h1 class="text-3xl font-semibold text-gray-900">Enquiry History</h1>
+            <p class="mt-2 text-sm text-gray-700">
+                View and track the status of your enquiries.
+            </p>
+        </div>
+        <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+            <a asp-action="Contact" class="btn-primary">
+                New Enquiry
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="mt-8 flex flex-col">
+            <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-300">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Subject</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Response</th>
+                                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                        <span class="sr-only">Actions</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                @foreach (var enquiry in Model)
+                                {
+                                    <tr>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            @enquiry.CreatedAt.ToString("MMM dd, yyyy")
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                                            @enquiry.Subject
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                            @{
+                                                var (statusColor, statusText) = enquiry.Status switch
+                                                {
+                                                    EnquiryStatus.Pending => ("yellow", "Pending"),
+                                                    EnquiryStatus.InProgress => ("blue", "In Progress"),
+                                                    EnquiryStatus.Resolved => ("green", "Resolved"),
+                                                    EnquiryStatus.Closed => ("gray", "Closed"),
+                                                    _ => ("gray", enquiry.Status.ToString())
+                                                };
+                                            }
+                                            <span class="inline-flex rounded-full bg-@(statusColor)-100 px-2 text-xs font-semibold leading-5 text-@(statusColor)-800">
+                                                @statusText
+                                            </span>
+                                        </td>
+                                        <td class="px-3 py-4 text-sm text-gray-500">
+                                            @if (enquiry.Response != null)
+                                            {
+                                                <div class="max-w-xs truncate">@enquiry.Response</div>
+                                                <div class="text-xs text-gray-400">
+                                                    Responded on @enquiry.RespondedAt?.ToString("MMM dd, yyyy")
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-gray-400">No response yet</span>
+                                            }
+                                        </td>
+                                        <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                            <button type="button" 
+                                                    onclick="showEnquiryDetails('@enquiry.Id', '@enquiry.Subject', '@enquiry.Message', '@enquiry.Response')"
+                                                    class="text-primary-600 hover:text-primary-900">
+                                                View Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center mt-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No enquiries</h3>
+            <p class="mt-1 text-sm text-gray-500">Get started by creating a new enquiry.</p>
+            <div class="mt-6">
+                <a asp-action="Contact" class="btn-primary">
+                    New Enquiry
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Enquiry Details Modal -->
+<div id="enquiryModal" class="fixed inset-0 z-10 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">&#8203;</span>
+        <div class="relative inline-block transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
+            <div>
+                <div class="mt-3 text-center sm:mt-5">
+                    <h3 class="text-lg font-medium leading-6 text-gray-900" id="modalTitle"></h3>
+                    <div class="mt-4">
+                        <div class="rounded-md bg-gray-50 p-4">
+                            <div class="text-sm text-gray-700" id="modalMessage"></div>
+                        </div>
+                        <div class="mt-4" id="modalResponseSection">
+                            <h4 class="text-sm font-medium text-gray-900">Response:</h4>
+                            <div class="mt-2 rounded-md bg-green-50 p-4">
+                                <div class="text-sm text-gray-700" id="modalResponse"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 sm:mt-6">
+                <button type="button" onclick="closeModal()"
+                        class="btn-secondary w-full">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showEnquiryDetails(id, subject, message, response) {
+            document.getElementById('modalTitle').textContent = subject;
+            document.getElementById('modalMessage').textContent = message;
+            
+            const responseSection = document.getElementById('modalResponseSection');
+            const responseContent = document.getElementById('modalResponse');
+            
+            if (response && response !== '') {
+                responseSection.classList.remove('hidden');
+                responseContent.textContent = response;
+            } else {
+                responseSection.classList.add('hidden');
+            }
+            
+            document.getElementById('enquiryModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('enquiryModal').classList.add('hidden');
+        }
+    </script>
+}

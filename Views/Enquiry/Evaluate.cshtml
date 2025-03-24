@@ -1,0 +1,125 @@
+@model StudentEnrollmentSystem.Models.ViewModels.TeachingEvaluationViewModel
+
+@{
+    ViewData["Title"] = "Course Evaluation";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-3xl mx-auto">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold text-gray-900">Course Evaluation</h1>
+            <p class="mt-2 text-sm text-gray-600">
+                Your feedback helps us improve our teaching quality and course content.
+            </p>
+        </div>
+
+        <div class="mt-12">
+            <form asp-action="Evaluate" method="post" class="space-y-8">
+                <input type="hidden" asp-for="CourseId" />
+                <input type="hidden" asp-for="InstructorName" />
+
+                <div asp-validation-summary="ModelOnly" class="text-sm text-red-600"></div>
+
+                <!-- Teaching Quality -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Teaching Quality</label>
+                    <p class="mt-1 text-sm text-gray-500">Rate the instructor's ability to explain concepts clearly and effectively.</p>
+                    <div class="mt-4">
+                        <div class="flex items-center space-x-4">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <label class="relative">
+                                    <input type="radio" asp-for="TeachingQuality" value="@i" class="sr-only" />
+                                    <div class="rating-star @(Model?.TeachingQuality == i ? "text-yellow-400" : "text-gray-300") cursor-pointer">
+                                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                                    </div>
+                                </label>
+                            }
+                        </div>
+                        <span asp-validation-for="TeachingQuality" class="mt-1 text-sm text-red-600"></span>
+                    </div>
+                </div>
+
+                <!-- Assignment Feedback -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Assignment Feedback</label>
+                    <p class="mt-1 text-sm text-gray-500">Rate the quality and timeliness of feedback on assignments and assessments.</p>
+                    <div class="mt-4">
+                        <div class="flex items-center space-x-4">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <label class="relative">
+                                    <input type="radio" asp-for="AssignmentFeedback" value="@i" class="sr-only" />
+                                    <div class="rating-star @(Model?.AssignmentFeedback == i ? "text-yellow-400" : "text-gray-300") cursor-pointer">
+                                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                    </div>
+                                </label>
+                            }
+                        </div>
+                        <span asp-validation-for="AssignmentFeedback" class="mt-1 text-sm text-red-600"></span>
+                    </div>
+                </div>
+
+                <!-- Student Engagement -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Student Engagement</label>
+                    <p class="mt-1 text-sm text-gray-500">Rate how well the instructor encourages student participation and engagement.</p>
+                    <div class="mt-4">
+                        <div class="flex items-center space-x-4">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <label class="relative">
+                                    <input type="radio" asp-for="Engagement" value="@i" class="sr-only" />
+                                    <div class="rating-star @(Model?.Engagement == i ? "text-yellow-400" : "text-gray-300") cursor-pointer">
+                                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                    </div>
+                                </label>
+                            }
+                        </div>
+                        <span asp-validation-for="Engagement" class="mt-1 text-sm text-red-600"></span>
+                    </div>
+                </div>
+
+                <!-- Additional Comments -->
+                <div>
+                    <label asp-for="Comments" class="block text-sm font-medium text-gray-700">Additional Comments</label>
+                    <div class="mt-1">
+                        <textarea asp-for="Comments" rows="4" class="form-textarea block w-full" 
+                                  placeholder="Share your thoughts on what worked well and what could be improved..."></textarea>
+                        <span asp-validation-for="Comments" class="mt-1 text-sm text-red-600"></span>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <a asp-controller="Enquiry" asp-action="History" class="btn-secondary">Cancel</a>
+                    <button type="submit" class="btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Handle star rating interactivity
+        document.querySelectorAll('.rating-star').forEach(star => {
+            star.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('input');
+                const stars = this.closest('.flex').querySelectorAll('.rating-star');
+                const value = parseInt(input.value);
+
+                stars.forEach((s, index) => {
+                    s.classList.toggle('text-yellow-400', index < value);
+                    s.classList.toggle('text-gray-300', index >= value);
+                });
+            });
+        });
+    </script>
+}

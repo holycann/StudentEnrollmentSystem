@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StudentEnrollmentSystem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+</head>
+
+<body class="min-h-screen bg-gray-50 flex flex-col">
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="border-b border-gray-200">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="relative flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <a asp-area="" asp-controller="Home" asp-action="Index" class="flex items-center space-x-2">
+                                <svg class="h-8 w-auto text-primary-600" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                                    <path
+                                        d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                                </svg>
+                                <span class="text-xl font-bold text-primary-600">Student Portal</span>
+                            </a>
+                        </div>
+                            <div class="hidden sm:ml-10 sm:flex sm:items-center sm:space-x-6">
+                                <div class="relative group inline-flex items-center">
+                                    <a asp-controller="Home" asp-action="Index"
+                                        class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors duration-200 border-b-2 border-transparent hover:border-primary-600">Home</a>
+                                </div>
+
+                                <div class="relative group">
+                                    <button type="button"
+                                        class="group inline-flex items-center h-16 px-2 text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors duration-200 border-b-2 border-transparent hover:border-primary-600">
+                                        Courses
+                                        <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <div
+                                        class="hidden group-hover:block absolute left-1/2 z-10 mt-1 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transform -translate-x-1/2">
+                                        <div class="py-1">
+                                            <a asp-controller="Courses" asp-action="Index"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Browse
+                                                Courses</a>
+                                            <a asp-controller="CourseSchedule" asp-action="Index"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Course
+                                                Schedule</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="relative group">
+                                    <button type="button"
+                                        class="inline-flex items-center px-1 pt-1 text-gray-500 hover:text-primary-600 transition-colors duration-200">
+                                        Enrollment
+                                        <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <div
+                                        class="hidden group-hover:block absolute left-1/2 z-10 mt-1 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transform -translate-x-1/2">
+                                        <div class="py-1">
+                                            <a asp-controller="Enrollment" asp-action="History"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Current
+                                                Enrollment</a>
+                                            <a asp-controller="Enrollment" asp-action="Available"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add
+                                                Course</a>
+                                            <a asp-controller="Enrollment" asp-action="History"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Enrollment
+                                                History</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="relative group">
+                                    <button type="button"
+                                        class="inline-flex items-center px-1 pt-1 text-gray-500 hover:text-primary-600 transition-colors duration-200">
+                                        Financial
+                                        <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <div
+                                        class="hidden group-hover:block absolute left-1/2 z-10 mt-1 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transform -translate-x-1/2">
+                                        <div class="py-1">
+                                            <a asp-controller="Statements" asp-action="Index"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Statement</a>
+                                            <a asp-controller="Payment" asp-action="Process"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Make
+                                                Payment</a>
+                                            <a asp-controller="Payment" asp-action="History"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Payment
+                                                History</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="relative group">
+                                    <button type="button"
+                                        class="inline-flex items-center px-1 pt-1 text-gray-500 hover:text-primary-600 transition-colors duration-200">
+                                        Support
+                                        <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <div
+                                        class="hidden group-hover:block absolute left-1/2 z-10 mt-1 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transform -translate-x-1/2">
+                                        <div class="py-1">
+                                            <a asp-controller="Enquiry" asp-action="Index"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Submit
+                                                Enquiry</a>
+                                            <a asp-controller="Enquiry" asp-action="List"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My
+                                                Enquiries</a>
+                                            <a asp-controller="Evaluation" asp-action="Index"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Course
+                                                Evaluation</a>
+                                            <a href="#"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">FAQs</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute inset-y-0 right-0 flex items-center space-x-4 sm:static sm:inset-auto">
+                            <partial name="_LoginPartial" />
+                            <div class="flex items-center sm:hidden">
+                                <button type="button"
+                                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+                                    onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                                    <span class="sr-only">Open main menu</span>
+                                    <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Mobile menu -->
+                        <div class="hidden sm:hidden" id="mobile-menu">
+                            <div class="pt-2 pb-3 space-y-1 bg-white">
+                                <a asp-controller="Home" asp-action="Index"
+                                    class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-primary-500 hover:text-primary-700">Home</a>
+
+                                <!-- Mobile Courses Menu -->
+                                <div class="relative" x-data="{ open: false }">
+                                    <button type="button"
+                                        class="w-full flex items-center pl-3 pr-4 py-2 border-l-4 text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-primary-500 hover:text-primary-700"
+                                        onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                        <span>Courses</span>
+                                        <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <div class="hidden pl-4">
+                                        <a asp-controller="Courses" asp-action="Index"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Browse
+                                            Courses</a>
+                                        <a asp-controller="Courses" asp-action="Schedule"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Course
+                                            Schedule</a>
+                                        <a asp-controller="Courses" asp-action="Prerequisites"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Prerequisites</a>
+                                    </div>
+                                </div>
+
+                                <!-- Mobile Enrollment Menu -->
+                                <div class="relative">
+                                    <button type="button"
+                                        class="w-full flex items-center pl-3 pr-4 py-2 border-l-4 text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-primary-500 hover:text-primary-700"
+                                        onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                        <span>Enrollment</span>
+                                        <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <div class="hidden pl-4">
+                                        <a asp-controller="Enrollment" asp-action="Index"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Current
+                                            Enrollment</a>
+                                        <a asp-controller="Enrollment" asp-action="Add"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Add
+                                            Course</a>
+                                        <a asp-controller="Enrollment" asp-action="Drop"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Drop
+                                            Course</a>
+                                        <a asp-controller="Enrollment" asp-action="History"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Enrollment
+                                            History</a>
+                                    </div>
+                                </div>
+
+                                <!-- Mobile Financial Menu -->
+                                <div class="relative">
+                                    <button type="button"
+                                        class="w-full flex items-center pl-3 pr-4 py-2 border-l-4 text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-primary-500 hover:text-primary-700"
+                                        onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                        <span>Financial</span>
+                                        <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <div class="hidden pl-4">
+                                        <a asp-controller="Financial" asp-action="Statement"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Statement</a>
+                                        <a asp-controller="Financial" asp-action="Payment"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Make
+                                            Payment</a>
+                                        <a asp-controller="Financial" asp-action="History"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Payment
+                                            History</a>
+                                        <a asp-controller="Financial" asp-action="Receipts"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Receipts</a>
+                                    </div>
+                                </div>
+
+                                <!-- Mobile Support Menu -->
+                                <div class="relative">
+                                    <button type="button"
+                                        class="w-full flex items-center pl-3 pr-4 py-2 border-l-4 text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-primary-500 hover:text-primary-700"
+                                        onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                        <span>Support</span>
+                                        <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <div class="hidden pl-4">
+                                        <a asp-controller="Enquiry" asp-action="Index"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Submit
+                                            Enquiry</a>
+                                        <a asp-controller="Enquiry" asp-action="List"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">My
+                                            Enquiries</a>
+                                        <a asp-controller="Evaluation" asp-action="Index"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">Course
+                                            Evaluation</a>
+                                        <a href="#"
+                                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-primary-700">FAQs</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile menu button-->
+                    <div class="-mr-2 flex items-center sm:hidden">
+                        <button type="button" id="mobile-menu-button"
+                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500">
+                            <span class="sr-only">Open main menu</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Mobile menu -->
+                    <div class="sm:hidden hidden" id="mobile-menu">
+                        <div class="pt-2 pb-3 space-y-1">
+                            <a asp-controller="Home" asp-action="Index"
+                                class="block pl-3 pr-4 py-2 text-gray-500 hover:text-primary-600 transition-colors duration-200 border-l-4 border-transparent hover:border-primary-500">Home</a>
+                            
+                            <!-- Courses -->
+                            <div class="relative">
+                                <button type="button" class="w-full flex items-center pl-3 pr-4 py-2 text-gray-500 hover:text-primary-600 transition-colors duration-200 border-l-4 border-transparent hover:border-primary-500"
+                                    onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                    <span>Courses</span>
+                                    <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div class="hidden pl-4">
+                                    <a asp-controller="Courses" asp-action="Index" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Browse Courses</a>
+                                    <a asp-controller="CourseSchedule" asp-action="Index" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Course Schedule</a>
+                                </div>
+                            </div>
+
+                            <!-- Enrollment -->
+                            <div class="relative">
+                                <button type="button" class="w-full flex items-center pl-3 pr-4 py-2 text-gray-500 hover:text-primary-600 transition-colors duration-200 border-l-4 border-transparent hover:border-primary-500"
+                                    onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                    <span>Enrollment</span>
+                                    <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div class="hidden pl-4">
+                                    <a asp-controller="Enrollment" asp-action="History" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Current Enrollment</a>
+                                    <a asp-controller="Enrollment" asp-action="Available" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Add Course</a>
+                                    <a asp-controller="Enrollment" asp-action="History" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Enrollment History</a>
+                                </div>
+                            </div>
+
+                            <!-- Financial -->
+                            <div class="relative">
+                                <button type="button" class="w-full flex items-center pl-3 pr-4 py-2 text-gray-500 hover:text-primary-600 transition-colors duration-200 border-l-4 border-transparent hover:border-primary-500"
+                                    onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                    <span>Financial</span>
+                                    <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div class="hidden pl-4">
+                                    <a asp-controller="Statements" asp-action="Index" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Statement</a>
+                                    <a asp-controller="Payment" asp-action="Process" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Make Payment</a>
+                                    <a asp-controller="Payment" asp-action="History" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Payment History</a>
+                                </div>
+                            </div>
+
+                            <!-- Support -->
+                            <div class="relative">
+                                <button type="button" class="w-full flex items-center pl-3 pr-4 py-2 text-gray-500 hover:text-primary-600 transition-colors duration-200 border-l-4 border-transparent hover:border-primary-500"
+                                    onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                    <span>Support</span>
+                                    <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div class="hidden pl-4">
+                                    <a asp-controller="Enquiry" asp-action="Contact" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Contact Us</a>
+                                    <a asp-controller="Enquiry" asp-action="Timetable" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Timetable</a>
+                                    <a asp-controller="Enquiry" asp-action="Evaluate" class="block py-2 pl-3 pr-4 text-sm text-gray-500 hover:text-primary-600">Course Evaluation</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-white mt-auto border-t border-gray-200">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-500 text-sm">
+                &copy; 2025 - StudentEnrollmentSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy"
+                    class="text-primary-600 hover:text-primary-500">Privacy</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                const isClickInsideMenu = mobileMenu.contains(event.target);
+                const isClickOnButton = mobileMenuButton.contains(event.target);
+
+                if (!isClickInsideMenu && !isClickOnButton && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 640 && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

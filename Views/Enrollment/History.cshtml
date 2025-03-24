@@ -1,0 +1,210 @@
+@model StudentEnrollmentSystem.Models.ViewModels.EnrollmentHistoryViewModel
+@using StudentEnrollmentSystem.Models.Enums;
+
+@{
+    ViewData["Title"] = "Enrollment History";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+            <h1 class="text-3xl font-semibold text-gray-900">Enrollment History</h1>
+            <p class="mt-2 text-sm text-gray-700">
+                View your current and past course enrollments.
+            </p>
+        </div>
+        <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+            <a asp-controller="Courses" asp-action="Index" class="btn-primary">
+                Browse Courses
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Total Credits Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                    Total Credits Completed
+                </dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                    @Model.TotalCredits
+                </dd>
+            </div>
+        </div>
+
+        <!-- Total Fees Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                    Total Course Fees
+                </dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                    @Model.TotalFees.ToString("C")
+                </dd>
+            </div>
+        </div>
+
+        <!-- Active Courses Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                    Active Enrollments
+                </dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                    @Model.CurrentEnrollments.Count()
+                </dd>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Enrollments -->
+    @if (Model.CurrentEnrollments.Any())
+    {
+        <div class="mt-8">
+            <h2 class="text-lg leading-6 font-medium text-gray-900">Current Enrollments</h2>
+            <div class="mt-4 flex flex-col">
+                <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Course</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Credits</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Fee</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Enrolled On</th>
+                                        <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                            <span class="sr-only">Actions</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    @foreach (var enrollment in Model.CurrentEnrollments)
+                                    {
+                                        <tr>
+                                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                                <div class="font-medium text-gray-900">@enrollment.Course.Name</div>
+                                                <div class="text-gray-500">@enrollment.Course.CourseCode</div>
+                                            </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                @enrollment.Course.Credits
+                                            </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                @enrollment.Course.Fee.ToString("C")
+                                            </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                                @{
+                                                    var (statusColor, statusText) = enrollment.Status switch
+                                                    {
+                                                        EnrollmentStatus.Active => ("green", "Active"),
+                                                        EnrollmentStatus.Pending => ("yellow", "Pending"),
+                                                        _ => ("gray", enrollment.Status.ToString())
+                                                    };
+                                                }
+                                                <span class="inline-flex rounded-full bg-@(statusColor)-100 px-2 text-xs font-semibold leading-5 text-@(statusColor)-800">
+                                                    @statusText
+                                                </span>
+                                            </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                @enrollment.EnrollmentDate.ToShortDateString()
+                                            </td>
+                                            <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                @if (enrollment.Status == EnrollmentStatus.Active || enrollment.Status == EnrollmentStatus.Pending)
+                                                {
+                                                    <form asp-action="Drop" asp-route-id="@enrollment.Id" method="post" class="inline">
+                                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to drop this course?')">
+                                                            Drop
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Past Enrollments -->
+    @if (Model.PastEnrollments.Any())
+    {
+        <div class="mt-8">
+            <h2 class="text-lg leading-6 font-medium text-gray-900">Past Enrollments</h2>
+            <div class="mt-4 flex flex-col">
+                <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Course</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Credits</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Fee</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Enrolled On</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    @foreach (var enrollment in Model.PastEnrollments)
+                                    {
+                                        <tr>
+                                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                                <div class="font-medium text-gray-900">@enrollment.Course.Name</div>
+                                                <div class="text-gray-500">@enrollment.Course.CourseCode</div>
+                                            </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                @enrollment.Course.Credits
+                                            </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                @enrollment.Course.Fee.ToString("C")
+                                            </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                                @{
+                                                    var (statusColor, statusText) = enrollment.Status switch
+                                                    {
+                                                        EnrollmentStatus.Completed => ("green", "Completed"),
+                                                        EnrollmentStatus.Dropped => ("red", "Dropped"),
+                                                        _ => ("gray", enrollment.Status.ToString())
+                                                    };
+                                                }
+                                                <span class="inline-flex rounded-full bg-@(statusColor)-100 px-2 text-xs font-semibold leading-5 text-@(statusColor)-800">
+                                                    @statusText
+                                                </span>
+                                            </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                @enrollment.EnrollmentDate.ToShortDateString()
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!Model.CurrentEnrollments.Any() && !Model.PastEnrollments.Any())
+    {
+        <div class="text-center mt-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No enrollments</h3>
+            <p class="mt-1 text-sm text-gray-500">Get started by enrolling in a course.</p>
+            <div class="mt-6">
+                <a asp-controller="Courses" asp-action="Index" class="btn-primary">
+                    Browse Courses
+                </a>
+            </div>
+        </div>
+    }
+</div>
