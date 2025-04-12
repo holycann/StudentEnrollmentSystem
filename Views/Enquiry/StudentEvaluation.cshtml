@@ -1,0 +1,226 @@
+@model StudentEnrollmentSystem.Models.ViewModels.StudentEvaluationViewModels
+@{
+    ViewData["Title"] = "Student Evaluation of Teaching";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<div class="container">
+    <h1>Student Evaluation of Teaching</h1>
+    <p class="lead">Your feedback helps us improve the quality of education.</p>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Course Evaluation Form</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        @* Dummy value studentEvaluationId *@
+                        <input type="number" asp-for="StudentEvaluation.Id" value="1" class="hidden" />
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.CourseCode" class="form-label"></label>
+                            <select asp-for="StudentEvaluation.CourseCode" class="form-select" id="courseCodeSelect">
+                                <option value="">-- Select Course --</option>
+                                @foreach (var course in Model.AvailableCourses)
+                                {
+                                    <option value="@course.Key">@course.Value</option>
+                                }
+                            </select>
+                            <span asp-validation-for="StudentEvaluation.CourseCode" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.CourseName" class="form-label"></label>
+                            <input id="Evaluation_CourseName" asp-for="StudentEvaluation.CourseName" class="form-control" readonly />
+                            <span asp-validation-for="StudentEvaluation.CourseName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.InstructorName" class="form-label"></label>
+                            <input id="Evaluation_InstructorName" asp-for="StudentEvaluation.InstructorName" class="form-control" readonly />
+                            <span asp-validation-for="StudentEvaluation.InstructorName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.Semester" class="form-label"></label>
+                            <select asp-for="StudentEvaluation.Semester" class="form-select">
+                                <option value="">-- Select Semester --</option>
+                                <option value="Fall">Fall</option>
+                                <option value="Spring">Spring</option>
+                                <option value="Summer">Summer</option>
+                            </select>
+                            <span asp-validation-for="StudentEvaluation.Semester" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.Year" class="form-label"></label>
+                            <input asp-for="StudentEvaluation.Year" class="form-control" type="number" min="2020" max="2030" />
+                            <span asp-validation-for="StudentEvaluation.Year" class="text-danger"></span>
+                        </div>
+                        
+                        <hr class="my-4" />
+                        
+                        <h5>Course Ratings</h5>
+                        <p class="text-muted">Please rate the following aspects of the course on a scale of 1 to 5, where 1 is poor and 5 is excellent.</p>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.CourseContentRating" class="form-label"></label>
+                            <div class="d-flex">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" asp-for="StudentEvaluation.CourseContentRating" id="courseContent-@i" value="@i" />
+                                        <label class="form-check-label" for="courseContent-@i">@i</label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="StudentEvaluation.CourseContentRating" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.TeachingQualityRating" class="form-label"></label>
+                            <div class="d-flex">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" asp-for="StudentEvaluation.TeachingQualityRating" id="teachingQuality-@i" value="@i" />
+                                        <label class="form-check-label" for="teachingQuality-@i">@i</label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="StudentEvaluation.TeachingQualityRating" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.AssessmentFairnessRating" class="form-label"></label>
+                            <div class="d-flex">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" asp-for="StudentEvaluation.AssessmentFairnessRating" id="assessmentFairness-@i" value="@i" />
+                                        <label class="form-check-label" for="assessmentFairness-@i">@i</label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="StudentEvaluation.AssessmentFairnessRating" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.LearningResourcesRating" class="form-label"></label>
+                            <div class="d-flex">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" asp-for="StudentEvaluation.LearningResourcesRating" id="learningResources-@i" value="@i" />
+                                        <label class="form-check-label" for="learningResources-@i">@i</label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="StudentEvaluation.LearningResourcesRating" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.OverallSatisfactionRating" class="form-label"></label>
+                            <div class="d-flex">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" asp-for="StudentEvaluation.OverallSatisfactionRating" id="overallSatisfaction-@i" value="@i" />
+                                        <label class="form-check-label" for="overallSatisfaction-@i">@i</label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="StudentEvaluation.OverallSatisfactionRating" class="text-danger"></span>
+                        </div>
+                        
+                        <hr class="my-4" />
+                        
+                        <h5>Feedback</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.Strengths" class="form-label"></label>
+                            <textarea asp-for="StudentEvaluation.Strengths" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="StudentEvaluation.Strengths" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.AreasForImprovement" class="form-label"></label>
+                            <textarea asp-for="StudentEvaluation.AreasForImprovement" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="StudentEvaluation.AreasForImprovement" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="StudentEvaluation.AdditionalComments" class="form-label"></label>
+                            <textarea asp-for="StudentEvaluation.AdditionalComments" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="StudentEvaluation.AdditionalComments" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <p class="mb-0"><strong>Note:</strong> Your evaluation is anonymous. Your identity will not be linked to your feedback.</p>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Submit Evaluation</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Why Your Feedback Matters</h5>
+                </div>
+                <div class="card-body">
+                    <p>Your honest feedback helps us:</p>
+                    <ul>
+                        <li class="mb-2">Improve course content and delivery</li>
+                        <li class="mb-2">Enhance teaching methods</li>
+                        <li class="mb-2">Address areas that need improvement</li>
+                        <li class="mb-2">Recognize excellent teaching</li>
+                        <li>Create a better learning experience for all students</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Rating Guide</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>5 - Excellent:</strong> Consistently exceeds expectations</p>
+                    <p><strong>4 - Very Good:</strong> Often exceeds expectations</p>
+                    <p><strong>3 - Good:</strong> Meets expectations</p>
+                    <p><strong>2 - Fair:</strong> Sometimes falls short of expectations</p>
+                    <p><strong>1 - Poor:</strong> Consistently falls short of expectations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Simple script to populate course name and instructor when course code is selected
+        document.getElementById('courseCodeSelect').addEventListener('change', function() {
+            const courseData = @Html.Raw(Json.Serialize(Model.CourseData));
+            const selectedCourse = courseData[this.value];
+
+            if (selectedCourse) {
+                document.getElementById('Evaluation_CourseName').value = selectedCourse.name;
+                document.getElementById('Evaluation_InstructorName').value = selectedCourse.instructor;
+            } else {
+                document.getElementById('Evaluation_CourseName').value = '';
+                document.getElementById('Evaluation_InstructorName').value = '';
+            }
+        });
+    </script>
+}

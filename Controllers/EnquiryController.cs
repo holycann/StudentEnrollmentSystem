@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using StudentEnrollmentSystem.Data;
 using StudentEnrollmentSystem.Models;
 using StudentEnrollmentSystem.Models.Enums;
@@ -13,195 +14,254 @@ namespace StudentEnrollmentSystem.Controllers;
 [Authorize]
 public class EnquiryController : Controller
 {
-    private readonly ApplicationDbContext _context;
     private readonly UserManager<User> _userManager;
     private readonly IEnrollmentService _enrollmentService;
+    private readonly ILogger<EnquiryController> _logger;
 
     public EnquiryController(
-        ApplicationDbContext context,
         UserManager<User> userManager,
-        IEnrollmentService enrollmentService
+        IEnrollmentService enrollmentService,
+        ILogger<EnquiryController> logger
     )
     {
-        _context = context;
         _userManager = userManager;
         _enrollmentService = enrollmentService;
+        _logger = logger;
     }
 
-    // GET: /Enquiry/Contact
-    public IActionResult Contact()
+    [HttpGet]
+    [Authorize]
+    public IActionResult Index()
+    {
+        var Enquery = new Enquiry();
+
+        return View(Enquery);
+    }
+
+    [HttpPost]
+    [Authorize]
+    public IActionResult Index(Enquiry model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View();
+        }
+
+        // In a real application, you would save the enquiry to a database
+        // For now, we'll just redirect to a success page
+        TempData["SuccessMessage"] = "Your enquiry has been submitted successfully. We will get back to you soon.";
+
+        return RedirectToAction("Success", "Enquiry");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult ContactUs()
     {
         return View();
     }
 
-    // POST: /Enquiry/Contact
-    // [HttpPost]
-    // [ValidateAntiForgeryToken]
-    // public async Task<IActionResult> Contact(EnquiryViewModel model)
-    // {
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return View(model);
-    //     }
-
-    //     var user = await _userManager.GetUserAsync(User);
-    //     var enquiry = new Enquiry
-    //     {
-    //         Subject = model.Subject,
-    //         Message = model.Message,
-    //         SubmissionDate = DateTime.UtcNow,
-    //         Status = EnquiryStatus.Pending,
-    //     };
-
-    //     _context.Enquiries.Add(enquiry);
-    //     await _context.SaveChangesAsync();
-
-    //     TempData["SuccessMessage"] = "Your enquiry has been submitted successfully.";
-    //     return RedirectToAction(nameof(History));
-    // }
-
-    // GET: /Enquiry/History
-    // public async Task<IActionResult> History()
-    // {
-    //     var user = await _userManager.GetUserAsync(User);
-    //     var enquiries = await _context
-    //         .Enquiries.Where(e => e.Student.StudentId == user.StudentId)
-    //         .OrderByDescending(e => e.SubmissionDate)
-    //         .Select(e => new EnquiryViewModel
-    //         {
-    //             Id = e.Id,
-    //             Subject = e.Subject,
-    //             Message = e.Message,
-    //             Status = e.Status,
-    //             Response = e.Response,
-    //             CreatedAt = e.SubmissionDate,
-    //         })
-    //         .ToListAsync();
-
-    //     return View(enquiries);
-    // }
-
-    // GET: /Enquiry/Timetable
-    // public async Task<IActionResult> Timetable()
-    // {
-    //     var user = await _userManager.GetUserAsync(User);
-    //     var enrollments = await _context
-    //         .Enrollments.Include(e => e.Course)
-    //         .Where(e => e.StudentId == user.Id && e.Status == EnrollmentStatus.Active)
-    //         .ToListAsync();
-
-    //     var schedule = new Dictionary<string, List<Models.ViewModels.TimeSlot>>();
-    //     foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
-    //     {
-    //         schedule[day.ToString()] = new List<Models.ViewModels.TimeSlot>();
-    //     }
-
-    //     var courseSchedules = new List<CourseScheduleViewModel>();
-    //     foreach (var enrollment in enrollments)
-    //     {
-    //         var timeSlots = await _context
-    //             .CourseSchedules.Where(cs => cs.CourseId == enrollment.CourseId)
-    //             .Select(cs => new Models.ViewModels.TimeSlot
-    //             {
-    //                 Day = cs.DayOfWeek,
-    //                 StartTime = cs.StartTime,
-    //                 EndTime = cs.EndTime,
-    //                 Room = cs.Room,
-    //             })
-    //             .ToListAsync();
-
-    //         courseSchedules.Add(
-    //             new CourseScheduleViewModel
-    //             {
-    //                 CourseId = enrollment.CourseId,
-    //                 CourseCode = enrollment.Course.CourseCode,
-    //                 CourseName = enrollment.Course.Name,
-    //                 TimeSlots = timeSlots,
-    //             }
-    //         );
-
-    //         foreach (var slot in timeSlots)
-    //         {
-    //             schedule[slot.Day.ToString()].Add(slot);
-    //         }
-    //     }
-
-    //     var viewModel = new TimetableViewModel { Courses = courseSchedules, Schedule = schedule };
-
-    //     return View(viewModel);
-    // }
-
-    // // GET: /Enquiry/Evaluate/{courseId}
-    // public async Task<IActionResult> Evaluate(int courseId)
-    // {
-    //     var user = await _userManager.GetUserAsync(User);
-    //     var enrollment = await _context
-    //         .Enrollments.Include(e => e.EnrollmentCourses)
-    //         .ThenInclude(ec => ec.Course)
-    //         .FirstOrDefaultAsync(e => e.CourseId == courseId && e.StudentId == user.Id);
-
-    //     if (enrollment == null)
-    //     {
-    //         return NotFound();
-    //     }
-
-    //     var existingEvaluation = await _context.TeachingEvaluations.FirstOrDefaultAsync(e =>
-    //         e.CourseId == courseId && e.StudentId == user.Id
-    //     );
-
-    //     if (existingEvaluation != null)
-    //     {
-    //         TempData["ErrorMessage"] = "You have already submitted an evaluation for this course.";
-    //         return RedirectToAction("History", "Enrollment");
-    //     }
-
-    //     var viewModel = new TeachingEvaluationViewModel
-    //     {
-    //         CourseId = courseId,
-    //         // InstructorName = enrollment.EnrollmentCourses.First().Course.,
-    //     };
-
-    //     return View(viewModel);
-    // }
-
-    // POST: /Enquiry/Evaluate
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Evaluate(TeachingEvaluationViewModel model)
+    [Authorize]
+    public IActionResult ContactUs(ContactMessage model)
     {
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return View();
         }
 
-        var user = await _userManager.GetUserAsync(User);
-        var evaluation = new TeachingEvaluation
-        {
-            CourseId = model.CourseId,
-            StudentId = user.Id,
-            InstructorName = model.InstructorName,
-            TeachingEffectiveness = model.TeachingQuality,
-            LearningMaterials = model.MaterialQuality,
-            Feedback = model.AssignmentFeedback,
-            Engagement = model.Engagement,
-            AdditionalComments = model.Comments,
-            SubmittedAt = DateTime.UtcNow,
-        };
+        // In a real application, you would save the contact message to a database
+        // and potentially send an email notification
 
-        _context.TeachingEvaluations.Add(evaluation);
-        await _context.SaveChangesAsync();
+        TempData["SuccessMessage"] = "Your message has been sent successfully. We will get back to you soon.";
 
-        TempData["SuccessMessage"] = "Thank you for submitting your evaluation.";
-        return RedirectToAction("History", "Enrollment");
+        return RedirectToAction("ContactSuccess", "Enquiry");
     }
 
-    // GET: /Enquiry/CheckScheduleConflict
-    // [HttpGet]
-    // public async Task<IActionResult> CheckScheduleConflict(int courseId)
-    // {
-    //     var user = await _userManager.GetUserAsync(User);
-    //     var hasConflict = await _enrollmentService.HasScheduleConflictAsync(user.Id, courseId);
+    [HttpGet]
+    [Authorize]
+    public IActionResult ContactSuccess()
+    {
+        // If there's no success message in TempData, redirect to the contact form
+        if (TempData["SuccessMessage"] == null)
+        {
+            RedirectToAction("ContactUs", "Enquiry");
+        }
 
-    //     return Json(new { hasConflict });
-    // }
+        return View();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult Success()
+    {
+        if (TempData["SuccessMessage"] == null)
+        {
+            RedirectToAction("Index", "Enquiry");
+        }
+
+        return View();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult StudentEvaluation()
+    {
+        // Initialize the evaluation object
+        var model = new StudentEvaluationViewModels
+        {
+            StudentEvaluation = new Models.StudentEvaluation(),
+
+            // Populate available courses (in a real app, this would come from a database)
+            AvailableCourses = new Dictionary<string, string>
+            {
+                { "CS101", "Introduction to Computer Science" },
+                { "CS201", "Data Structures and Algorithms" },
+                { "CS301", "Database Systems" },
+                { "CS401", "Software Engineering" },
+                { "MATH101", "Calculus I" },
+                { "MATH201", "Linear Algebra" }
+            },
+
+            // Populate course data with additional information
+            CourseData = new Dictionary<string, CourseInfo>
+            {
+                { "CS101", new CourseInfo { Name = "Introduction to Computer Science", Instructor = "Dr. John Smith" } },
+                { "CS201", new CourseInfo { Name = "Data Structures and Algorithms", Instructor = "Dr. Jane Doe" } },
+                { "CS301", new CourseInfo { Name = "Database Systems", Instructor = "Prof. Robert Johnson" } },
+                { "CS401", new CourseInfo { Name = "Software Engineering", Instructor = "Dr. Emily Chen" } },
+                { "MATH101", new CourseInfo { Name = "Calculus I", Instructor = "Prof. Michael Brown" } },
+                { "MATH201", new CourseInfo { Name = "Linear Algebra", Instructor = "Dr. Sarah Wilson" } }
+            },
+        };
+
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [Authorize]
+    public IActionResult StudentEvaluation(StudentEvaluationViewModels model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
+            Console.WriteLine("Model in StudentEvaluation: " + json);
+
+            // Cetak error per field
+            foreach (var entry in ModelState)
+            {
+                var field = entry.Key;
+                var errors = entry.Value.Errors;
+
+                foreach (var error in errors)
+                {
+                    Console.WriteLine($"Error in field '{field}': {error.ErrorMessage}");
+                }
+            }
+
+            // Re-populate the dropdown data if validation fails
+            return View();
+        }
+
+
+        // In a real application, save the evaluation to a database
+        _logger.LogInformation("Student evaluation submitted for course: {CourseCode}", model.StudentEvaluation.CourseCode);
+
+        // Redirect to a thank you page or show a success message
+        TempData["SuccessMessage"] = "Thank you for your feedback! Your evaluation has been submitted.";
+        return RedirectToAction("Index", "Home");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult TimetableMatching()
+    {
+        // Initialize the evaluation object
+        var model = new TimetableMatchingViewModel
+        {
+            AvailableCourses = new List<string>
+            {
+                "CS101: Introduction to Programming",
+                "CS201: Data Structures and Algorithms",
+                "CS301: Database Systems",
+                "CS401: Software Engineering",
+                "MATH101: Calculus I",
+                "MATH201: Linear Algebra",
+                "ENG101: English Composition",
+                "PHYS101: Physics I",
+                "BIO101: Biology I",
+                "CHEM101: Chemistry I"
+            },
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [Authorize]
+    public IActionResult TimetableMatching(TimetableMatchingViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View();
+        }
+
+        // Process the selected courses
+        model.TimetableRequest.PreferredCourses = model.SelectedCourses;
+
+        // Process the unavailable times
+        foreach (var timeSlot in model.UnavailableTimes)
+        {
+            var parts = timeSlot.Split('-');
+            if (parts.Length == 2)
+            {
+                if (Enum.TryParse<DayOfWeek>(parts[0], out var day))
+                {
+                    var timeOfDay = parts[1];
+                    var unavailableTime = new UnavailableTime { DayOfWeek = day };
+
+                    // Set the time range based on the time of day
+                    switch (timeOfDay)
+                    {
+                        case "Morning":
+                            unavailableTime.StartTime = new TimeSpan(8, 0, 0);
+                            unavailableTime.EndTime = new TimeSpan(12, 0, 0);
+                            break;
+                        case "Afternoon":
+                            unavailableTime.StartTime = new TimeSpan(12, 0, 0);
+                            unavailableTime.EndTime = new TimeSpan(17, 0, 0);
+                            break;
+                        case "Evening":
+                            unavailableTime.StartTime = new TimeSpan(17, 0, 0);
+                            unavailableTime.EndTime = new TimeSpan(21, 0, 0);
+                            break;
+                    }
+
+                    model.TimetableRequest.UnavailableTimes.Add(unavailableTime);
+                }
+            }
+        }
+
+        // In a real application, you would save the timetable request to a database
+        // and process it to generate a matching timetable
+
+        TempData["SuccessMessage"] = "Your timetable matching request has been submitted successfully. We will process your request and send you an optimized timetable within 2 business days.";
+
+        return RedirectToAction("SuccessTimetableMatching", "Enquiry");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult SuccessTimetableMatching()
+    {
+        // If there's no success message in TempData, redirect to the timetable matching form
+        if (TempData["SuccessMessage"] == null)
+        {
+            RedirectToAction("TimetableMatching", "Enquiry");
+        }
+
+        return View();
+    }
+
 }

@@ -3,23 +3,45 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using StudentEnrollmentSystem.Models;
-using StudentEnrollmentSystem.Models.Enums;
 
-namespace StudentEnrollmentSystem.Models;
-
-public class Enquiry
+namespace StudentEnrollmentSystem.Models
 {
-    public int Id { get; set; } = 0;
-    public string StudentId { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Subject { get; set; } = string.Empty;
-    public string Message { get; set; } = string.Empty;
-    public DateTime SubmissionDate { get; set; } = DateTime.UtcNow;
-    public Enums.EnquiryStatus Status { get; set; } = Enums.EnquiryStatus.Pending;
-    public string Response { get; set; } = string.Empty;
+    public class Enquiry
+    {
+        [Key]
+        public int Id { get; set; }
 
-    // Navigation properties
-    [JsonIgnore]
-    public virtual Student Student { get; set; } = null!;
+        [Required]
+        [Display(Name = "Full Name")]
+        public string Name { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Phone Number")]
+        public string Phone { get; set; }
+
+        [Required]
+        public string Subject { get; set; }
+
+        [Required]
+        [Display(Name = "Message")]
+        public string Message { get; set; }
+
+        [Display(Name = "Date Submitted")]
+        public DateTime DateSubmitted { get; set; } = DateTime.Now;
+
+        [Display(Name = "Status")]
+        public EnquiryStatus Status { get; set; } = EnquiryStatus.Pending;
+    }
+
+    public enum EnquiryStatus
+    {
+        Pending,
+        InProgress,
+        Resolved,
+        Closed
+    }
 }

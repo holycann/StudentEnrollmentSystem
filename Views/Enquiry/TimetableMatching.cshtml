@@ -1,0 +1,152 @@
+@model StudentEnrollmentSystem.Models.ViewModels.TimetableMatchingViewModel
+@{
+    ViewData["Title"] = "Timetable Matching";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<div class="container">
+    <h1>Timetable Matching</h1>
+    <p class="lead">Find the perfect course schedule that fits your availability.</p>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Request Timetable Match</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="TimetableRequest.StudentId" class="form-label"></label>
+                            <input asp-for="TimetableRequest.StudentId" class="form-control" />
+                            <span asp-validation-for="TimetableRequest.StudentId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TimetableRequest.StudentName" class="form-label"></label>
+                            <input asp-for="TimetableRequest.StudentName" class="form-control" />
+                            <span asp-validation-for="TimetableRequest.StudentName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TimetableRequest.Email" class="form-label"></label>
+                            <input asp-for="TimetableRequest.Email" class="form-control" />
+                            <span asp-validation-for="TimetableRequest.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Preferred Courses</label>
+                            <div class="row">
+                                @foreach (var course in Model.AvailableCourses)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="SelectedCourses"
+                                                value="@course" id="course-@course.Replace(" ", "-")" />
+                                            <label class="form-check-label" for="course-@course.Replace(" ", "-")">
+                                                @course
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Unavailable Times</label>
+                            <div class="row">
+                                @foreach (var day in Enum.GetValues<DayOfWeek>())
+                                {
+                                    if (day != DayOfWeek.Saturday && day != DayOfWeek.Sunday)
+                                    {
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h6 class="mb-0">@day</h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox" name="UnavailableTimes"
+                                                            value="@day-Morning" id="@day-Morning" />
+                                                        <label class="form-check-label" for="@day-Morning">
+                                                            Morning (8:00 AM - 12:00 PM)
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox" name="UnavailableTimes"
+                                                            value="@day-Afternoon" id="@day-Afternoon" />
+                                                        <label class="form-check-label" for="@day-Afternoon">
+                                                            Afternoon (12:00 PM - 5:00 PM)
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="UnavailableTimes"
+                                                            value="@day-Evening" id="@day-Evening" />
+                                                        <label class="form-check-label" for="@day-Evening">
+                                                            Evening (5:00 PM - 9:00 PM)
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TimetableRequest.AdditionalNotes" class="form-label"></label>
+                            <textarea asp-for="TimetableRequest.AdditionalNotes" class="form-control"
+                                rows="3"></textarea>
+                            <span asp-validation-for="TimetableRequest.AdditionalNotes" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">How It Works</h5>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li class="mb-2">Fill out the form with your student information and course preferences</li>
+                        <li class="mb-2">Indicate times when you are NOT available to attend classes</li>
+                        <li class="mb-2">Submit your request</li>
+                        <li class="mb-2">Our system will analyze available course sections</li>
+                        <li>You'll receive an optimized timetable within 2 business days</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Benefits</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li class="mb-2">Save time by automating your course scheduling</li>
+                        <li class="mb-2">Avoid scheduling conflicts with work or other commitments</li>
+                        <li class="mb-2">Optimize your campus time with efficient scheduling</li>
+                        <li>Get personalized recommendations based on your preferences</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

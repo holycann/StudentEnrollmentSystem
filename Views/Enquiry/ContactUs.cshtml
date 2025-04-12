@@ -1,0 +1,100 @@
+@model StudentEnrollmentSystem.Models.ContactMessage
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<div class="container">
+    <h1>Contact Us</h1>
+    <p class="lead">Get in touch with our support team for assistance.</p>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Phone" class="form-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Subject" class="form-label"></label>
+                    <input asp-for="Subject" class="form-control" />
+                    <span asp-validation-for="Subject" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Message" class="form-label"></label>
+                    <textarea asp-for="Message" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Contact Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Address:</strong><br />
+                    123 University Avenue<br />
+                    Campus Building, Room 456<br />
+                    City, State 12345</p>
+                    
+                    <p><strong>Phone:</strong><br />
+                    Main Office: (123) 456-7890<br />
+                    Student Support: (123) 456-7891</p>
+                    
+                    <p><strong>Email:</strong><br />
+                    General Inquiries: info@university.edu<br />
+                    Student Support: support@university.edu</p>
+                    
+                    <p><strong>Hours of Operation:</strong><br />
+                    Monday - Friday: 8:00 AM - 5:00 PM<br />
+                    Saturday: 9:00 AM - 1:00 PM<br />
+                    Sunday: Closed</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Campus Map</h5>
+                </div>
+                <div class="card-body">
+                    <div class="ratio ratio-16x9">
+                        <!-- Placeholder for a map - in a real application, you would embed a Google Map or similar -->
+                        <div class="bg-light d-flex align-items-center justify-content-center">
+                            <p class="text-muted">Campus Map Would Be Displayed Here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

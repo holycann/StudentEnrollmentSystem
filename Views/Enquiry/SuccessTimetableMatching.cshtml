@@ -1,0 +1,42 @@
+@model StudentEnrollmentSystem.Models.ViewModels.TimetableMatchingViewModel
+@{
+    ViewData["Title"] = "Timetable Request Submitted";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">Timetable Request Submitted</h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                    </div>
+                    
+                    <p class="lead text-center">@TempData["SuccessMessage"]</p>
+                    
+                    <div class="alert alert-info">
+                        <p><strong>What happens next?</strong></p>
+                        <ul>
+                            <li>Our system will analyze your preferences and availability</li>
+                            <li>We'll match you with the best possible course schedule</li>
+                            <li>You'll receive an email with your optimized timetable</li>
+                            <li>You can review and confirm the proposed schedule</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="/" class="btn btn-primary me-2">Return to Home</a>
+                        <a asp-action="TimetableMatching" class="btn btn-outline-primary">Submit Another Request</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

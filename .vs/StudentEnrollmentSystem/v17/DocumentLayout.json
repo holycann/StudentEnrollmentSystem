@@ -3,6 +3,58 @@
   "WorkspaceRootPath": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\user\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\user\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\user\\teacher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\user\\teacher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\user\\student.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\user\\student.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\statement\\studentstatement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\statement\\studentstatement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\statement\\classtimetable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\statement\\classtimetable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\program\\semester.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\program\\semester.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\program\\programstudy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\program\\programstudy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\payment\\paymenthistory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\payment\\paymenthistory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\payment\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\payment\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\enrollment\\enrollmentcourse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\enrollment\\enrollmentcourse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\enrollment\\enrollment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\enrollment\\enrollment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\enquiry\\teachingevaluation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\enquiry\\teachingevaluation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\models\\enquiry\\enquiry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:models\\enquiry\\enquiry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|e:\\inti-collage\\web-application-development\\studentenrollmentsystem\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{F229238E-D14F-40D2-A44E-6E4BAD5ED05F}|StudentEnrollmentSystem.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -26,6 +78,175 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "User.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\User\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User\\User.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\User\\User.cs",
+              "RelativeToolTip": "Models\\User\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:32:18.386Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Teacher.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\User\\Teacher.cs",
+              "RelativeDocumentMoniker": "Models\\User\\Teacher.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\User\\Teacher.cs",
+              "RelativeToolTip": "Models\\User\\Teacher.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:32:13.833Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Student.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\User\\Student.cs",
+              "RelativeDocumentMoniker": "Models\\User\\Student.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\User\\Student.cs",
+              "RelativeToolTip": "Models\\User\\Student.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAYwC4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:32:10.12Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "StudentStatement.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Statement\\StudentStatement.cs",
+              "RelativeDocumentMoniker": "Models\\Statement\\StudentStatement.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Statement\\StudentStatement.cs",
+              "RelativeToolTip": "Models\\Statement\\StudentStatement.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:32:02.968Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ClassTimetable.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Statement\\ClassTimetable.cs",
+              "RelativeDocumentMoniker": "Models\\Statement\\ClassTimetable.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Statement\\ClassTimetable.cs",
+              "RelativeToolTip": "Models\\Statement\\ClassTimetable.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:31:58.093Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Semester.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Program\\Semester.cs",
+              "RelativeDocumentMoniker": "Models\\Program\\Semester.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Program\\Semester.cs",
+              "RelativeToolTip": "Models\\Program\\Semester.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:31:52.424Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ProgramStudy.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Program\\ProgramStudy.cs",
+              "RelativeDocumentMoniker": "Models\\Program\\ProgramStudy.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Program\\ProgramStudy.cs",
+              "RelativeToolTip": "Models\\Program\\ProgramStudy.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:31:44.467Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PaymentHistory.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Payment\\PaymentHistory.cs",
+              "RelativeDocumentMoniker": "Models\\Payment\\PaymentHistory.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Payment\\PaymentHistory.cs",
+              "RelativeToolTip": "Models\\Payment\\PaymentHistory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:31:29.144Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Payment.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Payment\\Payment.cs",
+              "RelativeDocumentMoniker": "Models\\Payment\\Payment.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Payment\\Payment.cs",
+              "RelativeToolTip": "Models\\Payment\\Payment.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAgwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:31:22.821Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "EnrollmentCourse.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Enrollment\\EnrollmentCourse.cs",
+              "RelativeDocumentMoniker": "Models\\Enrollment\\EnrollmentCourse.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Enrollment\\EnrollmentCourse.cs",
+              "RelativeToolTip": "Models\\Enrollment\\EnrollmentCourse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:31:16.517Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Enrollment.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Enrollment\\Enrollment.cs",
+              "RelativeDocumentMoniker": "Models\\Enrollment\\Enrollment.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Enrollment\\Enrollment.cs",
+              "RelativeToolTip": "Models\\Enrollment\\Enrollment.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAzwCUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:31:05.143Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "TeachingEvaluation.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Enquiry\\TeachingEvaluation.cs",
+              "RelativeDocumentMoniker": "Models\\Enquiry\\TeachingEvaluation.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Enquiry\\TeachingEvaluation.cs",
+              "RelativeToolTip": "Models\\Enquiry\\TeachingEvaluation.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAA1wDMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:30:58.531Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Enquiry.cs",
+              "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Enquiry\\Enquiry.cs",
+              "RelativeDocumentMoniker": "Models\\Enquiry\\Enquiry.cs",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\Models\\Enquiry\\Enquiry.cs",
+              "RelativeToolTip": "Models\\Enquiry\\Enquiry.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T12:30:52.038Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "appsettings.json",
               "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -38,27 +259,25 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 15,
               "Title": "Microsoft.PackageDependencyResolution.targets",
               "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\9.0.200\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
               "ToolTip": "C:\\Program Files\\dotnet\\sdk\\9.0.200\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
               "ViewState": "AgIAAPEAAAAAAAAAAAAmwAkBAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
-              "WhenOpened": "2025-04-05T22:52:14.189Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-05T22:52:14.189Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "StudentEnrollmentSystem",
+              "DocumentIndex": 14,
+              "Title": "StudentEnrollmentSystem.csproj",
               "DocumentMoniker": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\StudentEnrollmentSystem.csproj",
               "RelativeDocumentMoniker": "StudentEnrollmentSystem.csproj",
-              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\StudentEnrollmentSystem.csproj*",
-              "RelativeToolTip": "StudentEnrollmentSystem.csproj*",
+              "ToolTip": "E:\\INTI-Collage\\Web-Application-Development\\StudentEnrollmentSystem\\StudentEnrollmentSystem.csproj",
+              "RelativeToolTip": "StudentEnrollmentSystem.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-04-05T22:59:07.576Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-05T22:59:07.576Z"
             }
           ]
         }

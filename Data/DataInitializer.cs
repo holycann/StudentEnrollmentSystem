@@ -418,36 +418,36 @@ namespace StudentEnrollmentSystem.Data
             //     context.SaveChanges();
             // }
 
-            if (!context.Enquiries.Any())
-            {
-                var enquiries = new List<Enquiry>
-                {
-                    new Enquiry
-                    {
-                        StudentId = studentsList[0].StudentId,
-                        Name = "Student 1",
-                        Email = "student1@example.com",
-                        Subject = "Computer Science",
-                        Message = "What are the prerequisites for CS101?",
-                        SubmissionDate = DateTime.UtcNow,
-                        Status = EnquiryStatus.Pending,
-                        Response = "No prerequisites.",
-                    },
-                    new Enquiry
-                    {
-                        StudentId = studentsList[1].StudentId,
-                        Name = "Student 2",
-                        Email = "student2@example.com",
-                        Subject = "Information Technology",
-                        Message = "How do I enroll in courses?",
-                        SubmissionDate = DateTime.UtcNow,
-                        Status = EnquiryStatus.Pending,
-                        Response = "You can enroll through the student portal.",
-                    },
-                };
-                context.Enquiries.AddRange(enquiries);
-                context.SaveChanges();
-            }
+            // if (!context.Enquiries.Any())
+            // {
+            //     var enquiries = new List<Enquiry>
+            //     {
+            //         new Enquiry
+            //         {
+            //             StudentId = studentsList[0].StudentId,
+            //             Name = "Student 1",
+            //             Email = "student1@example.com",
+            //             Subject = "Computer Science",
+            //             Message = "What are the prerequisites for CS101?",
+            //             SubmissionDate = DateTime.UtcNow,
+            //             Status = EnquiryStatus.Pending,
+            //             Response = "No prerequisites.",
+            //         },
+            //         new Enquiry
+            //         {
+            //             StudentId = studentsList[1].StudentId,
+            //             Name = "Student 2",
+            //             Email = "student2@example.com",
+            //             Subject = "Information Technology",
+            //             Message = "How do I enroll in courses?",
+            //             SubmissionDate = DateTime.UtcNow,
+            //             Status = EnquiryStatus.Pending,
+            //             Response = "You can enroll through the student portal.",
+            //         },
+            //     };
+            //     context.Enquiries.AddRange(enquiries);
+            //     context.SaveChanges();
+            // }
         }
     }
 }

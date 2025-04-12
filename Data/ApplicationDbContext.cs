@@ -32,7 +32,6 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
     // Enquiry
     public DbSet<Enquiry> Enquiries { get; set; }
-    public DbSet<TeachingEvaluation> TeachingEvaluations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -129,27 +128,27 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .OnDelete(DeleteBehavior.Restrict);
 
         // Relasi Enquiry ke Student
-        modelBuilder
-            .Entity<Enquiry>()
-            .HasOne(e => e.Student)
-            .WithMany(s => s.Enquiries)
-            .HasForeignKey(e => e.StudentId)
-            .OnDelete(DeleteBehavior.Restrict);
+        // modelBuilder
+        //     .Entity<Enquiry>()
+        //     .HasOne(e => e.Student)
+        //     .WithMany(s => s.Enquiries)
+        //     .HasForeignKey(e => e.StudentId)
+        //     .OnDelete(DeleteBehavior.Restrict);
 
         // Relasi Teaching Evaluation ke Student & Course
-        modelBuilder
-            .Entity<TeachingEvaluation>()
-            .HasOne(e => e.Student)
-            .WithMany()
-            .HasForeignKey(e => e.StudentId)
-            .OnDelete(DeleteBehavior.Restrict);
+        // modelBuilder
+        //     .Entity<TeachingEvaluation>()
+        //     .HasOne(e => e.Student)
+        //     .WithMany()
+        //     .HasForeignKey(e => e.StudentId)
+        //     .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder
-            .Entity<TeachingEvaluation>()
-            .HasOne(e => e.Course)
-            .WithMany()
-            .HasForeignKey(e => e.CourseId)
-            .OnDelete(DeleteBehavior.Restrict);
+        // modelBuilder
+        //     .Entity<TeachingEvaluation>()
+        //     .HasOne(e => e.Course)
+        //     .WithMany()
+        //     .HasForeignKey(e => e.CourseId)
+        //     .OnDelete(DeleteBehavior.Restrict);
 
         // Relasi Course Schedule ke Course
         modelBuilder

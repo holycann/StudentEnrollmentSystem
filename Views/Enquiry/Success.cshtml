@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Enquiry Submitted";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">Enquiry Submitted Successfully</h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                    </div>
+                    
+                    <p class="lead text-center">@TempData["SuccessMessage"]</p>
+                    
+                    <div class="alert alert-info">
+                        <p><strong>What happens next?</strong></p>
+                        <ul>
+                            <li>Our team will review your enquiry</li>
+                            <li>You will receive a confirmation email shortly</li>
+                            <li>We aim to respond to all enquiries within 2 business days</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="/" class="btn btn-primary me-2">Return to Home</a>
+                        <a asp-action="Index" class="btn btn-outline-primary">Submit Another Enquiry</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
