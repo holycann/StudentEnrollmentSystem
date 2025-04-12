@@ -1,0 +1,31 @@
+﻿@model StudentEnrollmentSystem.Models.ViewModels.UpdateBankDetailsViewModels
+@{
+    ViewData["Title"] = "Update Bank Details";
+}
+
+<div class="max-w-xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Update Bank Details</h2>
+
+    <form method="post" class="space-y-6">
+        <div>
+            <label for="BankName" class="block mb-1 text-sm font-medium text-gray-700">Bank Name</label>
+            <input type="text" id="BankName" name="BankName" asp-for="BankName"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <span asp-validation-for="BankName" class="text-sm text-red-600 mt-1 block"></span>
+        </div>
+
+        <div>
+            <label for="AccountNumber" class="block mb-1 text-sm font-medium text-gray-700">Account Number</label>
+            <input type="text" id="AccountNumber" name="AccountNumber" asp-for="AccountNumber"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <span asp-validation-for="AccountNumber" class="text-sm text-red-600 mt-1 block"></span>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button type="submit"
+                class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Update</button>
+            <a href="/"
+                class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">Back to Home</a>
+        </div>
+    </form>
+</div>

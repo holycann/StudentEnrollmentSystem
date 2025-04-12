@@ -1,0 +1,141 @@
+@model StudentEnrollmentSystem.Models.ViewModels.PaymentDetailsViewModel
+
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl relative" id="receipt">
+    <h1 class="text-2xl font-semibold text-blue-900 mb-6">Payment details</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Left Column: Student and Enrollment Data -->
+        <div>
+            <!-- Student Data Section -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-500 mb-4">Student Data</h2>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Student Name</label>
+                    <p class="text-gray-900">@Model.StudentName</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Student ID</label>
+                    <p class="text-gray-900">@Model.StudentId</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Email</label>
+                    <p class="text-gray-900">@Model.Email</p>
+                </div>
+            </div>
+
+            <!-- Enrollment Data Section -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-500 mb-4">Enrollment Data</h2>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Enrollment Date</label>
+                    <p class="text-gray-900">@Model.EnrollmentDate.ToString("dd MMM, yyyy HH:mm")</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Total Credits</label>
+                    <p class="text-gray-900">@Model.EnrollmentCourses.Sum(c => c.Course.Credits)</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Enrollment Status</label>
+                    <p class="text-gray-900">@Model.EnrollmentStatus.ToString()</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Program Name</label>
+                    <p class="text-gray-900">@Model.ProgramName</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Semester</label>
+                    <p class="text-gray-900">@Model.SemesterName</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Payment and Course Data -->
+        <div>
+            <!-- Payment Data Section -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-500 mb-4">Payment Data</h2>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Amount Paid</label>
+                    <p class="text-gray-900">RM @Model.Amount</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Payment Date</label>
+                    @if (Model.PaymentDate != null)
+                    {
+                        <p class="text-gray-900">@Model.PaymentDate?.ToString("dd MMM, yyyy HH:mm")</p>
+                    }
+                    else
+                    {
+                        <p class="text-gray-900">N/A</p>
+                    }
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Payment Status</label>
+                    <p class="text-gray-900">@Model.PaymentStatus.ToString()</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Payment Method</label>
+                    <p class="text-gray-900">@Model.PaymentMethod</p>
+                </div>
+            </div>
+
+            <!-- Course Data Section -->
+            <div>
+                <h2 class="text-lg font-semibold text-gray-500 mb-4">Course Data</h2>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">List courses</label>
+                    <ul class="list-disc list-inside text-gray-900">
+                        @foreach (var course in Model.EnrollmentCourses)
+                        {
+                            <li>@course.Course.Name</li>
+                        }
+                    </ul>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Total Credits × Fee/Credit</label>
+                    <p class="text-gray-900">@Model.EnrollmentCourses.Sum(c => c.Course.Credits) × RM @Model.EnrollmentCourses.First().Course.Fee = RM @Model.Amount</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="absolute top-8 right-8" id="download-button">
+        <button onclick="downloadReceipt()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Download
+            Receipt</button>
+    </div>
+    <button id="back-button" onclick="window.history.back()"
+        class="bg-gray-500 text-white px-4 py-2 rounded-lg">Back</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+
+<script>
+    function downloadReceipt() {
+        const backBtn = document.getElementById('back-button');
+        const downloadBtn = document.getElementById('download-button');
+        const receipt = document.getElementById('receipt');
+
+        backBtn.style.display = 'none';
+        downloadBtn.style.display = 'none';
+
+        setTimeout(() => {
+            const opt = {
+                margin: 0,
+                filename: '@Model.ProgramName' + '-' + '@Model.SemesterName' + '-' + 'receipt.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 3, useCORS: true, backgroundColor: '#ffffff' },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(receipt).save().then(() => {
+                backBtn.style.display = 'block';
+                downloadBtn.style.display = 'block';
+            });
+        }, 300);
+    }
+
+</script>

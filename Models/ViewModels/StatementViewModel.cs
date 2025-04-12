@@ -1,13 +1,11 @@
-using System.ComponentModel.DataAnnotations;
+using StudentEnrollmentSystem.Models.ViewModels;
 
 namespace StudentEnrollmentSystem.Models.ViewModels;
 
 public class StatementViewModel
 {
-    public required string StudentId { get; set; }
-    public required string StudentName { get; set; }
-    public required string StudentEmail { get; set; }
-    public required string Program { get; set; }
+    public StudentViewModel Student { get; set; }
+    public ProgramStudyViewModel ProgramStudy { get; set; }
     public DateTime GeneratedDate { get; set; }
     public decimal TotalFees { get; set; }
     public decimal TotalPaid { get; set; }
@@ -33,7 +31,6 @@ public class EnrollmentStatement
 public class PaymentStatement
 {
     public int PaymentId { get; set; }
-    public required string TransactionId { get; set; }
     public decimal Amount { get; set; }
     public DateTime PaymentDate { get; set; }
     public Enums.PaymentStatus Status { get; set; }

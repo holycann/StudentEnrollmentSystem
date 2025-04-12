@@ -1,0 +1,42 @@
+@model IEnumerable<StudentEnrollmentSystem.Models.ViewModels.PaymentInvoiceViewModel>
+
+@{
+    ViewData["Title"] = "Invoice";
+}
+
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Invoice</h1>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+            <thead>
+                <tr class="w-full border-b bg-gray-50">
+                    <th class="py-3 px-4 text-left text-cyan-600 font-semibold">ENROLLMENT ID</th>
+                    <th class="py-3 px-4 text-left text-cyan-600 font-semibold">PROGRAM</th>
+                    <th class="py-3 px-4 text-left text-cyan-600 font-semibold">SEMESTER</th>
+                    <th class="py-3 px-4 text-left text-cyan-600 font-semibold">PAYMENT METHOD</th>
+                    <th class="py-3 px-4 text-left text-cyan-600 font-semibold">EXPIRATION DATE</th>
+                    <th class="py-3 px-4 text-left text-cyan-600 font-semibold">AMOUNT</th>
+                    <th class="py-3 px-4 text-left text-cyan-600 font-semibold"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var payment in Model)
+                {
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="py-4 px-6 text-gray-800">@payment.EnrollmentId</td>
+                        <td class="py-4 px-6 text-gray-800">@payment.ProgramName</td>
+                        <td class="py-4 px-6 text-gray-800">@payment.SemesterName</td>
+                        <td class="py-4 px-6 text-gray-800">@payment.PaymentMethod</td>
+                        <td class="py-4 px-6 text-gray-800">@payment.ExpirationDate.ToString("dd MMM, yyyy")</td>
+                        <td class="py-4 px-6 text-gray-800">@payment.Amount</td>
+                        <td class="py-4 px-6 text-right">
+                            <a href="@Url.Action("DetailInvoice", "Payment", new { id = payment.PaymentId })" class="text-cyan-500 hover:underline">VIEW</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

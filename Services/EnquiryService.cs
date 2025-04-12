@@ -8,11 +8,17 @@ namespace StudentEnrollmentSystem.Services;
 
 public interface IEnquiryService
 {
-    Task<(bool success, string message)> SubmitEnquiryAsync(string studentId, string subject, string message);
+    Task<(bool success, string message)> SubmitEnquiryAsync(
+        string studentId,
+        string subject,
+        string message
+    );
     Task<List<Enquiry>> GetEnquiryHistoryAsync(string studentId);
     Task<(bool success, string message)> SubmitEvaluationAsync(TeachingEvaluation evaluation);
     Task<List<TeachingEvaluation>> GetEvaluationHistoryAsync(string studentId);
-    Task<Dictionary<DayOfWeek, List<Models.ViewModels.TimeSlot>>> GetWeeklyScheduleAsync(string studentId);
+    // Task<Dictionary<DayOfWeek, List<Models.ViewModels.TimeSlot>>> GetWeeklyScheduleAsync(
+    //     string studentId
+    // );
 }
 
 public class EnquiryService : IEnquiryService
@@ -24,7 +30,11 @@ public class EnquiryService : IEnquiryService
         _context = context;
     }
 
-    public async Task<(bool success, string message)> SubmitEnquiryAsync(string studentId, string subject, string message)
+    public async Task<(bool success, string message)> SubmitEnquiryAsync(
+        string studentId,
+        string subject,
+        string message
+    )
     {
         try
         {
@@ -34,7 +44,7 @@ public class EnquiryService : IEnquiryService
                 Subject = subject,
                 Message = message,
                 SubmissionDate = DateTime.UtcNow,
-                Status = EnquiryStatus.Pending
+                Status = EnquiryStatus.Pending,
             };
 
             _context.Enquiries.Add(enquiry);
@@ -49,19 +59,22 @@ public class EnquiryService : IEnquiryService
 
     public async Task<List<Enquiry>> GetEnquiryHistoryAsync(string studentId)
     {
-        return await _context.Enquiries
-            .Where(e => e.StudentId == studentId)
+        return await _context
+            .Enquiries.Where(e => e.StudentId == studentId)
             .OrderByDescending(e => e.SubmissionDate)
             .ToListAsync();
     }
 
-    public async Task<(bool success, string message)> SubmitEvaluationAsync(TeachingEvaluation evaluation)
+    public async Task<(bool success, string message)> SubmitEvaluationAsync(
+        TeachingEvaluation evaluation
+    )
     {
         try
         {
             // Check if already submitted
-            var existingEvaluation = await _context.TeachingEvaluations
-                .AnyAsync(e => e.CourseId == evaluation.CourseId && e.StudentId == evaluation.StudentId);
+            var existingEvaluation = await _context.TeachingEvaluations.AnyAsync(e =>
+                e.CourseId == evaluation.CourseId && e.StudentId == evaluation.StudentId
+            );
 
             if (existingEvaluation)
             {
@@ -81,40 +94,50 @@ public class EnquiryService : IEnquiryService
 
     public async Task<List<TeachingEvaluation>> GetEvaluationHistoryAsync(string studentId)
     {
-        return await _context.TeachingEvaluations
-            .Where(e => e.StudentId == studentId)
+        return await _context
+            .TeachingEvaluations.Where(e => e.StudentId == studentId)
             .OrderByDescending(e => e.SubmittedAt)
             .ToListAsync();
     }
 
-    public async Task<Dictionary<DayOfWeek, List<Models.ViewModels.TimeSlot>>> GetWeeklyScheduleAsync(string studentId)
-    {
-        var enrollments = await _context.Enrollments
-            .Include(e => e.Course)
-            .ThenInclude(c => c.CourseSchedules)
-            .Where(e => e.StudentId == studentId && e.Status == EnrollmentStatus.Active)
-            .ToListAsync();
+    // public async Task<
+    //     Dictionary<DayOfWeek, List<Models.ViewModels.TimeSlot>>
+    // > GetWeeklyScheduleAsync(string studentId)
+    // {
+    //     var enrollments = await _context
+    //         .Enrollments.Include(e => e.EnrollmentCourses)
+    //         .ThenInclude(ec => ec.Course)
+    //         .ThenInclude(c => c.CourseSchedules)
+    //         .Where(e => e.StudentId == studentId && e.Status == EnrollmentStatus.Active)
+    //         .ToListAsync();
 
-        var schedule = new Dictionary<DayOfWeek, List<Models.ViewModels.TimeSlot>>();
-        foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
-        {
-            schedule[day] = new List<TimeSlot>();
-        }
+    //     var schedule = new Dictionary<DayOfWeek, List<Models.ViewModels.TimeSlot>>();
+    //     foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+    //     {
+    //         schedule[day] = new List<TimeSlot>();
+    //     }
 
-        foreach (var enrollment in enrollments)
-        {
-            foreach (var courseSchedule in enrollment.Course.CourseSchedules)
-            {
-                schedule[courseSchedule.DayOfWeek].Add(new TimeSlot
-                {
-                    Day = courseSchedule.DayOfWeek,
-                    StartTime = courseSchedule.StartTime,
-                    EndTime = courseSchedule.EndTime,
-                    Room = courseSchedule.Room
-                });
-            }
-        }
+    //     foreach (var enrollment in enrollments)
+    //     {
+    //         foreach (
+    //             var courseSchedule in enrollment.EnrollmentCourses.SelectMany(ec =>
+    //                 ec.Course.CourseSchedules
+    //             )
+    //         )
+    //         {
+    //             schedule[courseSchedule.DayOfWeek]
+    //                 .Add(
+    //                     new TimeSlot
+    //                     {
+    //                         Day = courseSchedule.DayOfWeek,
+    //                         StartTime = courseSchedule.StartTime,
+    //                         EndTime = courseSchedule.EndTime,
+    //                         Room = courseSchedule.Room,
+    //                     }
+    //                 );
+    //         }
+    //     }
 
-        return schedule;
-    }
+    //     return schedule;
+    // }
 }

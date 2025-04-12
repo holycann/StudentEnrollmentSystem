@@ -1,0 +1,117 @@
+@model StudentEnrollmentSystem.Models.ViewModels.WaitingPaymentViewModel
+
+@{
+    ViewData["Title"] = "Process Payment";
+}
+
+<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Payment Method Section -->
+        <div>
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <div class="mb-4">
+                    <p class="text-center text-gray-600 mb-2">
+                        Bank Account Number
+                    </p>
+                    <p class="text-center text-2xl font-bold text-gray-800 mb-4">
+                        1234567890
+                    </p>
+                    <div class="flex justify-center mb-4">
+                        <button class="bg-blue-900 text-white px-4 py-2 rounded-lg">
+                            Copy
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <p class="text-center text-gray-600 mb-2">
+                        Recipient Name
+                    </p>
+                    <p class="text-center text-2xl font-bold text-gray-800 mb-4">
+                        INTI INTERNATIONAL COLLEGE
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-gray-600">
+                    <div>
+                        <p class="text-sm">
+                            Expiration Date
+                        </p>
+                        <p class="font-semibold">
+                            @Model.ExpirationDate.ToString("dd/MM/yyyy HH:mm")
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm">
+                            Student Name
+                        </p>
+                        <p class="font-semibold">
+                            @Model.StudentName
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Enrollment Details Section -->
+        <div>
+            <h2 class="text-gray-600 text-sm font-semibold mb-4">
+                ENROLLMENT DETAILS
+            </h2>
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <div class="mb-4">
+                    <h2 class="text-gray-600 text-sm font-semibold mb-4">
+                        PROGRAM
+                    </h2>
+                    <p class="text-gray-800 font-semibold">
+                        @Model.Payment.ProgramName
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h2 class="text-gray-600 text-sm font-semibold mb-4">
+                        SEMESTER
+                    </h2>
+                    <p class="text-gray-800 font-semibold">
+                        @Model.Payment.SemesterName
+                    </p>
+                </div>
+
+                <h2 class="text-gray-600 text-sm font-semibold mb-4">
+                    COURSE LIST
+                </h2>
+                @foreach (var course in Model.Payment.Enrollment.EnrollmentCourses)
+                {
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-gray-800 font-semibold">
+                                @course.Course.Name
+                            </p>
+                            <p class="text-gray-800">
+                                @course.Course.Credits Credits
+                            </p>
+                        </div>
+                        <p class="text-gray-600 text-right">
+                            RM @course.Course.Fee per credit
+                        </p>
+                    </div>
+                }
+                <div class="flex justify-between items-center">
+                    <p class="text-gray-800 font-semibold">
+                        Total Cost:
+                    </p>
+                    <p class="text-gray-800 font-semibold">
+                        RM @Model.Payment.Amount
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(function () {
+                window.location.href = "/Payment/PaymentSuccess?paymentId=@Model.PaymentId";
+            }, 5000);
+        });
+    </script>
+}

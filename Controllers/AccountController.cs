@@ -1,27 +1,35 @@
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using StudentEnrollmentSystem.Data;
 using StudentEnrollmentSystem.Models;
 using StudentEnrollmentSystem.Models.ViewModels;
-using System.Security.Claims;
+using StudentEnrollmentSystem.Services;
 
 namespace StudentEnrollmentSystem.Controllers;
 
 public class AccountController : Controller
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signInManager;
+    private readonly IStudentService _studentService;
     private readonly IWebHostEnvironment _environment;
 
     public AccountController(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
-        IWebHostEnvironment environment)
+        UserManager<User> userManager,
+        SignInManager<User> signInManager,
+        IWebHostEnvironment environment,
+        IStudentService studentService
+    )
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _environment = environment;
+        _studentService = studentService;
     }
 
     [HttpGet]
@@ -31,92 +39,14 @@ public class AccountController : Controller
         return View();
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
-    {
-        ViewData["ReturnUrl"] = returnUrl;
-        if (ModelState.IsValid)
-        {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
-            if (result.Succeeded)
-            {
-                return RedirectToLocal(returnUrl);
-            }
-            if (result.IsLockedOut)
-            {
-                return View("Lockout");
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return View(model);
-            }
-        }
-        return View(model);
-    }
-
-    [HttpGet]
-    public IActionResult Register(string? returnUrl = null)
-    {
-        ViewData["ReturnUrl"] = returnUrl;
-        return View();
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
-    {
-        ViewData["ReturnUrl"] = returnUrl;
-        if (ModelState.IsValid)
-        {
-            var user = new ApplicationUser
-            {
-                UserName = model.Email,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                DateOfBirth = model.DateOfBirth,
-                Address = model.Address,
-                RegistrationDate = DateTime.UtcNow
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToLocal(returnUrl);
-            }
-            AddErrors(result);
-        }
-        return View(model);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Logout()
-    {
-        await _signInManager.SignOutAsync();
-        return RedirectToAction(nameof(HomeController.Index), "Home");
-    }
-
     [Authorize]
-    public async Task<IActionResult> Profile()
+    public IActionResult UpdateProfile()
     {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
+        var model = new UpdateProfileViewModels
         {
-            return NotFound();
-        }
-
-        var model = new ProfileViewModel
-        {
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email,
-            PhoneNumber = user.PhoneNumber,
-            Program = user.Program,
-            StudentId = user.Id
+            FullName = "Sagynysh Sovet", // ������
+            Email = "sagynysh@example.com",
+            PhoneNumber = "87001234567"
         };
 
         return View(model);
@@ -124,50 +54,81 @@ public class AccountController : Controller
 
     [Authorize]
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Profile(ProfileViewModel model)
+    public IActionResult UpdateProfile(UpdateProfileViewModels model)
     {
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return View();
         }
 
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
+        // ����� �������� ���������� ������ � ���� ������
+
+        TempData["SuccessMessage"] = "Profile updated successfully!";
+        return RedirectToAction("Index", "Home");
+    }
+
+    [Authorize]
+    public async Task<IActionResult> UpdateBankDetails()
+    {
+        var userId = HttpContext.Session.GetString("UserId");
+        if (userId == null)
         {
-            return NotFound();
+            return RedirectToAction("Login", "Account");
         }
 
-        user.FirstName = model.FirstName;
-        user.LastName = model.LastName;
-        user.PhoneNumber = model.PhoneNumber;
-        user.Program = model.Program;
+        var student = await _studentService.GetStudentByUserIdAsync(userId);
 
-        if (model.ProfilePicture != null)
+        if (student == null)
         {
-            var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", "profiles");
-            Directory.CreateDirectory(uploadsFolder);
-
-            var uniqueFileName = $"{user.Id}_{Guid.NewGuid()}{Path.GetExtension(model.ProfilePicture.FileName)}";
-            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await model.ProfilePicture.CopyToAsync(stream);
-            }
-
-            user.ProfilePicturePath = $"/uploads/profiles/{uniqueFileName}";
+            return NotFound("Student not found");
         }
 
-        var result = await _userManager.UpdateAsync(user);
-        if (result.Succeeded)
+        var model = new UpdateBankDetailsViewModels
         {
-            TempData["SuccessMessage"] = "Profile updated successfully.";
-            return RedirectToAction(nameof(Profile));
-        }
+            BankName = student.BankName,
+            AccountNumber = student.BankAccountNumber,
+        };
 
-        AddErrors(result);
         return View(model);
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> UpdateBankDetails(UpdateBankDetailsViewModels model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
+            Console.WriteLine("Model in UpdateBankDetails: " + json);
+            return View();
+        }
+
+        var userId = HttpContext.Session.GetString("UserId");
+        if (userId == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var student = await _studentService.GetStudentByUserIdAsync(userId);
+
+        if (student == null)
+        {
+            return NotFound("Student not found");
+        }
+
+        student.BankName = model.BankName;
+        student.BankAccountNumber = model.AccountNumber;
+
+        var updatedStudent = await _studentService.UpdateStudentAsync(student);
+
+        if (updatedStudent == null)
+        {
+            return NotFound("Student not found");
+        }
+
+        TempData["SuccessMessage"] = "Bank details updated successfully!";
+
+        return RedirectToAction("Index", "Home");
     }
 
     [Authorize]
@@ -178,193 +139,13 @@ public class AccountController : Controller
 
     [Authorize]
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+    public async Task<IActionResult> ChangePassword(ChangePasswordViewModels model)
     {
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return View();
         }
 
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
-        if (result.Succeeded)
-        {
-            await _signInManager.RefreshSignInAsync(user);
-            TempData["SuccessMessage"] = "Your password has been changed.";
-            return RedirectToAction(nameof(Profile));
-        }
-
-        AddErrors(result);
-        return View(model);
-    }
-
-    [Authorize]
-    public async Task<IActionResult> BankDetails()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var model = new BankDetailsViewModel
-        {
-            BankName = user.BankName,
-            AccountNumber = user.BankAccountNumber,
-        };
-
-        return View(model);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> BankDetails(BankDetailsViewModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
-
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        user.BankName = model.BankName;
-        user.BankAccountNumber = model.AccountNumber;
-
-        var result = await _userManager.UpdateAsync(user);
-        if (result.Succeeded)
-        {
-            TempData["SuccessMessage"] = "Bank details updated successfully.";
-            return RedirectToAction(nameof(Profile));
-        }
-
-        AddErrors(result);
-        return View(model);
-    }
-
-    [Authorize]
-    public async Task<IActionResult> SecurityPreferences()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var model = new SecurityPreferencesViewModel
-        {
-            EnableTwoFactor = await _userManager.GetTwoFactorEnabledAsync(user),
-            ReceiveSecurityNotifications = user.ReceiveSecurityNotifications,
-            LoginAlertEmails = user.LoginAlertEmails,
-            RememberBrowser = user.RememberBrowser,
-        };
-
-        return View(model);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> SecurityPreferences(SecurityPreferencesViewModel model)
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        await _userManager.SetTwoFactorEnabledAsync(user, model.EnableTwoFactor);
-        user.ReceiveSecurityNotifications = model.ReceiveSecurityNotifications;
-        user.LoginAlertEmails = model.LoginAlertEmails;
-        user.RememberBrowser = model.RememberBrowser;
-
-        var result = await _userManager.UpdateAsync(user);
-        if (result.Succeeded)
-        {
-            TempData["SuccessMessage"] = "Security preferences updated successfully.";
-            return RedirectToAction(nameof(Profile));
-        }
-
-        AddErrors(result);
-        return View(model);
-    }
-
-    [Authorize]
-    public async Task<IActionResult> NotificationPreferences()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var model = new NotificationPreferencesViewModel
-        {
-            EmailNotifications = user.EmailNotifications,
-            SmsNotifications = user.SmsNotifications,
-            PaymentReminders = user.PaymentReminders,
-            CourseUpdates = user.CourseUpdates,
-            EnrollmentNotifications = user.EnrollmentNotifications
-        };
-
-        return View(model);
-    }
-
-    [Authorize]
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> NotificationPreferences(NotificationPreferencesViewModel model)
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        user.EmailNotifications = model.EmailNotifications;
-        user.SmsNotifications = model.SmsNotifications;
-        user.PaymentReminders = model.PaymentReminders;
-        user.CourseUpdates = model.CourseUpdates;
-        user.EnrollmentNotifications = model.EnrollmentNotifications;
-
-        var result = await _userManager.UpdateAsync(user);
-        if (result.Succeeded)
-        {
-            TempData["SuccessMessage"] = "Notification preferences updated successfully.";
-            return RedirectToAction(nameof(Profile));
-        }
-
-        AddErrors(result);
-        return View(model);
-    }
-
-    private void AddErrors(IdentityResult result)
-    {
-        foreach (var error in result.Errors)
-        {
-            ModelState.AddModelError(string.Empty, error.Description);
-        }
-    }
-
-    private IActionResult RedirectToLocal(string returnUrl)
-    {
-        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-        {
-            return Redirect(returnUrl);
-        }
-        else
-        {
-            return RedirectToAction(nameof(HomeController.Index), "Home");
-        }
+        return RedirectToAction("Index", "Home");
     }
 }

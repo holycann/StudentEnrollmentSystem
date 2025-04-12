@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using StudentEnrollmentSystem.Models.Enums;
+using StudentEnrollmentSystem.Models.ViewModels;
 
 namespace StudentEnrollmentSystem.Models.ViewModels;
 
@@ -6,21 +8,14 @@ public class EnrollmentViewModel
 {
     public int Id { get; set; }
 
-    [Required]
-    public int CourseId { get; set; }
+    public EnrollmentStatus Status { get; set; } = EnrollmentStatus.Pending;
 
-    public string StudentId { get; set; }
+    public int TotalCredits { get; set; }
+    public decimal TotalFees { get; set; }
+    public DateTime? EnrollmentDate { get; set; } = DateTime.UtcNow;
 
-    [DataType(DataType.Date)]
-    public DateTime EnrollmentDate { get; set; }
-
-    public Enums.EnrollmentStatus Status { get; set; }
-
-    public string Notes { get; set; }
-
-    // Navigation properties
-    public CourseViewModel Course { get; set; }
-    public string StudentName { get; set; }
+    public virtual ICollection<EnrollmentCourseViewModel>? EnrollmentCourses { get; set; } =
+        new HashSet<EnrollmentCourseViewModel>();
 }
 
 public class EnrollmentRequestViewModel

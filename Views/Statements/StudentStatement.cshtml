@@ -1,0 +1,33 @@
+﻿@model StudentEnrollmentSystem.Models.StudentStatement
+
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-md">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Student Statement</h2>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-200 text-sm text-left text-gray-700">
+            <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                <tr>
+                    <th class="px-4 py-3 border-b">Date</th>
+                    <th class="px-4 py-3 border-b">Description</th>
+                    <th class="px-4 py-3 border-b">Amount (KZT)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Transactions)
+                {
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-4 py-2 border-b">@item.Date.ToShortDateString()</td>
+                        <td class="px-4 py-2 border-b">@item.Description</td>
+                        <td class="px-4 py-2 border-b">@item.Amount.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-6 text-right">
+        <p class="text-lg font-semibold text-gray-800">
+            Total Balance: <span class="text-green-600">@Model.TotalBalance.ToString("N2")</span> KZT
+        </p>
+    </div>
+</div>

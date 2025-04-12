@@ -2,7 +2,7 @@
   "Files": [
     {
       "Id": "/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/obj/Debug/net8.0/scopedcss/projectbundle/StudentEnrollmentSystem.bundle.scp.css",
-      "PackagePath": "staticwebassets/StudentEnrollmentSystem.bundle.scp.css"
+      "PackagePath": "staticwebassets/StudentEnrollmentSystem.tlqgcy0qg9.bundle.scp.css"
     },
     {
       "Id": "/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/wwwroot/css/site.css",
@@ -255,6 +255,10 @@
     {
       "Id": "/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/wwwroot/lib/jquery/dist/jquery.slim.min.map",
       "PackagePath": "staticwebassets/lib/jquery/dist/jquery.slim.min.map"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.StudentEnrollmentSystem.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
     },
     {
       "Id": "obj/Debug/net8.0/staticwebassets/msbuild.StudentEnrollmentSystem.Microsoft.AspNetCore.StaticWebAssets.props",

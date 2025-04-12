@@ -1,0 +1,127 @@
+@model StudentEnrollmentSystem.Models.ViewModels.PaymentAdjustmentViewModel
+
+@{
+    ViewData["Title"] = "Adjustments";
+}
+
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+    <h1 class="text-2xl font-semibold text-blue-900 mb-6">Adjustments</h1>
+
+    <form asp-action="ProcessAdjustment" asp-controller="Payment" method="POST">
+        <input type="hidden" asp-for="PaymentId" value="@Model.PaymentId">
+        <input type="hidden" asp-for="StudentId" value="@Model.StudentId">
+        <input type="hidden" asp-for="ProgramId" value="@Model.ProgramId">
+        <input type="hidden" asp-for="SemesterId" value="@Model.SemesterId">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Left Column: Student and Enrollment Data -->
+            <div>
+                <!-- Student Data Section -->
+                <div class="mb-8">
+                    <h2 class="text-lg font-semibold text-gray-500 mb-4">Student Data</h2>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Student Name</label>
+                        <input type="text" asp-for="StudentName"
+                            class="w-full border border-gray-300 rounded-lg p-2 bg-gray-100" value="@Model.StudentName"
+                            readonly>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Student ID</label>
+                        <input type="text" asp-for="StudentId"
+                            class="w-full border border-gray-300 rounded-lg p-2 bg-gray-100" value="@Model.StudentId"
+                            readonly>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Email</label>
+                        <input type="email" asp-for="Email"
+                            class="w-full border border-gray-300 rounded-lg p-2 bg-gray-100" value="@Model.Email"
+                            readonly>
+                    </div>
+                </div>
+
+                <!-- Enrollment Data Section -->
+                <div class="mb-8">
+                    <h2 class="text-lg font-semibold text-gray-500 mb-4">Enrollment Data</h2>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Enrollment Date</label>
+                        <input type="date" asp-for="EnrollmentDate" class="w-full border border-gray-300 rounded-lg p-2"
+                            value="@Model.EnrollmentDate.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Program Name</label>
+                        <select asp-for="ProgramName" asp-items="Model.Programs"
+                            class="w-full border border-gray-300 rounded-lg p-2">
+                            <option value="">@Model.ProgramName</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Semester</label>
+                        <select asp-for="SemesterName" asp-items="Model.Semesters"
+                            class="w-full border border-gray-300 rounded-lg p-2">
+                            <option value="">@Model.SemesterName</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Payment and Course Data -->
+            <div>
+                <!-- Payment Data Section -->
+                <div class="mb-8">
+                    <h2 class="text-lg font-semibold text-gray-500 mb-4">Payment Data</h2>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Payment Method</label>
+                        <select asp-for="PaymentMethod" asp-items="Model.PaymentMethods"
+                            class="w-full border border-gray-300 rounded-lg p-2">
+                            <option value="">@Model.PaymentMethod</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Course Data Section -->
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-500 mb-4">Course Data</h2>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">List courses</label>
+                        <select id="course-select" asp-for="SelectedCourses" asp-items="Model.Courses"
+                            class="w-full border border-gray-300 rounded-lg p-2" multiple>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Selected courses</label>
+                        <ul id="selected-courses" class="list-disc list-inside text-gray-900"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg w-full">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const courseSelect = document.getElementById('course-select');
+        const selectedCourses = document.getElementById('selected-courses');
+
+        courseSelect.addEventListener('change', function () {
+            const selectedOptions = Array.from(courseSelect.selectedOptions);
+            selectedCourses.innerHTML = ''; // Clear the selected courses list
+            selectedOptions.forEach(option => {
+                const li = document.createElement('li');
+                li.textContent = option.text;
+                li.dataset.value = option.value;
+                li.classList.add('cursor-pointer');
+                li.addEventListener('click', function () {
+                    // Move back to select dropdown when clicked
+                    courseSelect.appendChild(option);
+                    selectedCourses.removeChild(li);
+                    option.selected = false; // Update the select state
+                });
+                selectedCourses.appendChild(li);
+                option.selected = true; // Make sure the option is selected for form submission
+            });
+        });
+    });
+</script>

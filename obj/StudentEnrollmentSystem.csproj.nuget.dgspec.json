@@ -37,7 +37,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -46,6 +47,10 @@
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.2, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[8.0.5, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
@@ -61,13 +66,9 @@
               "target": "Package",
               "version": "[8.0.1, )"
             },
-            "Pomelo.EntityFrameworkCore.MySql": {
-              "target": "Package",
-              "version": "[8.0.3, )"
-            },
             "X.PagedList.Mvc.Core": {
               "target": "Package",
-              "version": "[8.4.7, )"
+              "version": "[10.5.7, )"
             }
           },
           "imports": [
@@ -81,6 +82,20 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.15, 8.0.15]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "version": "[8.0.15, 8.0.15]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.15, 8.0.15]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -89,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.407/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

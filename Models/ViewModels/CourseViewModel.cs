@@ -23,22 +23,13 @@ public class CourseViewModel
     public int Credits { get; set; }
 
     [Required]
-    [Range(1, 200)]
-    [Display(Name = "Maximum Seats")]
-    public int MaxSeats { get; set; }
-
-    [Display(Name = "Available Seats")]
-    public int AvailableSeats { get; set; }
-
-    [Required]
     [DataType(DataType.Currency)]
     public decimal Fee { get; set; }
 
     [Display(Name = "Prerequisites")]
-    public string Prerequisites { get; set; }
+    public List<string> Prerequisites { get; set; } = new();
 
     public List<int> PrerequisiteCourseIds { get; set; } = new();
-    public List<CourseViewModel> AvailablePrerequisites { get; set; } = new();
 }
 
 public class CourseListViewModel

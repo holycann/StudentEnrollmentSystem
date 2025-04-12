@@ -4,16 +4,16 @@ namespace StudentEnrollmentSystem.Models.ViewModels;
 
 public class LoginViewModel
 {
-    [Required]
-    [EmailAddress]
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Invalid email format.")]
     public string Email { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Password is required.")]
     [DataType(DataType.Password)]
     public string Password { get; set; }
 
     [Display(Name = "Remember me")]
-    public bool RememberMe { get; set; }
+    public bool RememberMe { get; set; } = false;
 
-    public string ReturnUrl { get; set; }
+    public string? ReturnUrl { get; set; }
 }

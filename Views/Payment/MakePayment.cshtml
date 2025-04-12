@@ -1,0 +1,153 @@
+@model StudentEnrollmentSystem.Models.ViewModels.MakePaymentViewModel
+
+@{
+    ViewData["Title"] = "Make a Payment";
+}
+
+<div class="container mx-auto p-4">
+    <form asp-action="ProcessPayment" asp-controller="Payment" method="post"
+        class="flex flex-col lg:flex-row justify-between">
+        <input type="text" asp-for="StudentId" value="@Model.StudentId" hidden />
+        <input type="text" asp-for="EnrollmentId" value="@Model.EnrollmentId" hidden />
+        <input type="text" asp-for="ProgramName" value="@Model.ProgramName" hidden />
+        <input type="text" asp-for="SemesterName" value="@Model.SemesterName" hidden />
+        <input type="text" asp-for="Amount" value="@Model.Amount" hidden />
+
+        <div class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-4">Choose your payment method</h2>
+            <div class="mb-4">
+                <div class="flex items-center mb-2">
+                    <input class="mr-2" id="bank-transfer" type="radio" asp-for="PaymentMethod" value="BankTransfer" />
+                    <label class="flex items-center w-full" for="bank-transfer">
+                        <div class="w-full p-4 bg-gray-100 rounded-lg flex justify-between items-center">
+                            <span>Bank Transfer</span>
+                        </div>
+                    </label>
+                </div>
+                <p class="text-gray-500 text-sm ml-6">Safe money transfer using your bank account.</p>
+            </div>
+            <div>
+                <div class="flex items-center mb-2">
+                    <input class="mr-2" id="credit-card" type="radio" asp-for="PaymentMethod" value="Cards" />
+                    <label class="flex items-center w-full" for="credit-card">
+                        <div class="w-full p-4 bg-gray-100 rounded-lg flex justify-between items-center">
+                            <span>Credit Card</span>
+                            <div class="flex space-x-2">
+                                <div class="w-10 h-6 bg-gray-300 rounded"></div>
+                                <div class="w-10 h-6 bg-gray-300 rounded"></div>
+                                <div class="w-10 h-6 bg-gray-300 rounded"></div>
+                                <div class="w-10 h-6 bg-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+                <p class="text-gray-500 text-sm ml-6">Safe payment online. Credit card needed. Visa, Mastercard,
+                    Maestro, Discover, American Express. Bank account is not necessary.</p>
+            </div>
+            <div id="credit-card-details" class="hidden mt-4">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700" for="card-number">Credit Card
+                        Number</label>
+                    <div class="relative mt-1">
+                        <input class="block w-full p-2 border border-gray-300 rounded-md" id="card-number" type="text"
+                            maxlength="19" asp-for="CardNumber" />
+                        <i class="fas fa-check-circle absolute right-3 top-3 text-green-500"></i>
+                    </div>
+                </div>
+                <div class="flex space-x-4 mb-4">
+                    <div class="w-1/3">
+                        <label class="block text-sm font-medium text-gray-700" for="cvv">CVV Code</label>
+                        <input class="block w-full p-2 border border-gray-300 rounded-md" id="cvv" type="text"
+                            maxlength="4" asp-for="CVV" />
+                    </div>
+                    <div class="w-1/3">
+                        <label class="block text-sm font-medium text-gray-700" for="expiry-date">Expiry Date</label>
+                        <input class="block w-full p-2 border border-gray-300 rounded-md" id="expiry-date"
+                            placeholder="MM/YY" type="text" maxlength="5" asp-for="ExpiryDate" />
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700" for="name-on-card">Name on Card</label>
+                    <input class="block w-full p-2 border border-gray-300 rounded-md" id="name-on-card" type="text"
+                        asp-for="CardholderName" />
+                </div>
+            </div>
+        </div>
+        <div class="w-full lg:w-1/3 bg-white p-6 rounded-lg shadow-md mt-6 lg:mt-0">
+            <h2 class="text-xl font-semibold mb-4">Enrollment Details Information</h2>
+            <div class="mb-4">
+                <p class="text-gray-700"><strong>Program:</strong> @Model.ProgramName</p>
+                <p class="text-gray-700"><strong>Course List:</strong></p>
+                <ul class="list-disc list-inside text-gray-700">
+                    @foreach (var course in Model.Enrollment.EnrollmentCourses)
+                    {
+                        <li>@course.Course.Name</li>
+                    }
+                </ul>
+                <p class="text-gray-700"><strong>Semester:</strong> @Model.SemesterName</p>
+            </div>
+            <div class="mb-4">
+                <p class="text-gray-700"><strong>Total Credits:</strong> @Model.Enrollment.TotalCredits</p>
+            </div>
+            <div class="mb-4">
+                <p class="text-2xl text-blue-500 font-semibold">RM @Model.Enrollment.TotalFees.ToString("F2")</p>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold">MAKE PAYMENT<i
+                    class="fas fa-arrow-right ml-2"></i></button>
+        </div>
+    </form>
+    <div class="mt-6 text-center">
+        <a class="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg" asp-action="Index"
+            asp-controller="Home">GO BACK</a>
+    </div>
+    <p class="text-center text-gray-500 text-sm mt-4">By clicking make payment button you agree with our terms and
+        conditions and money back guarantee. Thank you for trusting our service.</p>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cardNumberInput = document.getElementById('card-number');
+            const cvvInput = document.getElementById('cvv');
+            const expiryDateInput = document.getElementById('expiry-date');
+            const creditCardRadio = document.getElementById('credit-card');
+            const bankTransferRadio = document.getElementById('bank-transfer');
+            const creditCardDetails = document.getElementById('credit-card-details');
+
+            cardNumberInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.substring(0, 16);
+                e.target.value = value.replace(/(.{4})/g, '$1 ').trim();
+            });
+
+            cvvInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+                e.target.value = value.substring(0, 4);
+            });
+
+            expiryDateInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 4) {
+                    value = value.substring(0, 4);
+                }
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2);
+                }
+                e.target.value = value;
+            });
+
+            creditCardRadio.addEventListener('change', function () {
+                if (creditCardRadio.checked) {
+                    creditCardDetails.classList.remove('hidden');
+                }
+            });
+
+            bankTransferRadio.addEventListener('change', function () {
+                if (bankTransferRadio.checked) {
+                    creditCardDetails.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+}

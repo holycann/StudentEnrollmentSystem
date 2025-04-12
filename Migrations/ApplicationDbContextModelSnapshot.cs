@@ -17,48 +17,34 @@ namespace StudentEnrollmentSystem.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.13")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("CourseCourse", b =>
-                {
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PrerequisiteCoursesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CourseId", "PrerequisiteCoursesId");
-
-                    b.HasIndex("PrerequisiteCoursesId");
-
-                    b.ToTable("CourseCourse");
-                });
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -69,17 +55,17 @@ namespace StudentEnrollmentSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -94,17 +80,17 @@ namespace StudentEnrollmentSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -116,17 +102,17 @@ namespace StudentEnrollmentSystem.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -138,10 +124,10 @@ namespace StudentEnrollmentSystem.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -153,144 +139,20 @@ namespace StudentEnrollmentSystem.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("StudentEnrollmentSystem.Models.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("BankAccountNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("BankName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("CourseUpdates")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("EmailNotifications")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("EnrollmentNotifications")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("LoginAlertEmails")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("PaymentReminders")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("ProfilePicturePath")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Program")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("ReceiveSecurityNotifications")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime>("RegistrationDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("RememberBrowser")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("SmsNotifications")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("StudentId")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("StudentEnrollmentSystem.Models.Course", b =>
@@ -299,39 +161,70 @@ namespace StudentEnrollmentSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AvailableSeats")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CourseCode")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Credits")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Fee")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<int>("MaxSeats")
-                        .HasColumnType("int");
+                    b.Property<decimal>("FeePerCredit")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Prerequisites")
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TeacherId")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProgramId");
+
+                    b.HasIndex("TeacherId");
+
                     b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.CoursePrerequisite", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PrerequisiteCourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CourseId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SemesterId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CourseId", "PrerequisiteCourseId");
+
+                    b.HasIndex("CourseId1");
+
+                    b.HasIndex("PrerequisiteCourseId");
+
+                    b.HasIndex("SemesterId");
+
+                    b.ToTable("CoursePrerequisites");
                 });
 
             modelBuilder.Entity("StudentEnrollmentSystem.Models.CourseSchedule", b =>
@@ -340,7 +233,7 @@ namespace StudentEnrollmentSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
@@ -349,22 +242,15 @@ namespace StudentEnrollmentSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time(6)");
-
-                    b.Property<string>("InstructorName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("longtext");
+                        .HasColumnType("time");
 
                     b.Property<string>("Room")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time(6)");
+                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
@@ -379,37 +265,37 @@ namespace StudentEnrollmentSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Response")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("StudentId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Subject")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SubmissionDate")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -424,42 +310,60 @@ namespace StudentEnrollmentSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("EnrollmentDate")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("InstructorName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Notes")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("SemesterId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("StudentId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("TotalCredits")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("TotalFee")
-                        .HasColumnType("decimal(65,30)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("ProgramId");
+
+                    b.HasIndex("SemesterId");
 
                     b.HasIndex("StudentId");
 
                     b.ToTable("Enrollments");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.EnrollmentCourse", b =>
+                {
+                    b.Property<int>("EnrollmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Grade")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("EnrollmentId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("EnrollmentCourses");
                 });
 
             modelBuilder.Entity("StudentEnrollmentSystem.Models.Payment", b =>
@@ -468,7 +372,7 @@ namespace StudentEnrollmentSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -476,24 +380,19 @@ namespace StudentEnrollmentSystem.Migrations
                     b.Property<int>("EnrollmentId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("PaymentMethod")
+                    b.Property<DateTime?>("PaymentDate")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("StudentId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("TransactionId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
@@ -504,23 +403,166 @@ namespace StudentEnrollmentSystem.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.PaymentHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("NewStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("OldStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StatusUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentId");
+
+                    b.ToTable("PaymentHistories");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.ProgramStudy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("DurationInYears")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProgramStudies");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Semester", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("SemesterNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Semesters");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Student", b =>
+                {
+                    b.Property<string>("StudentId")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("BankAccountNumber")
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("BankName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SemesterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("StudentId");
+
+                    b.HasIndex("ProgramId");
+
+                    b.HasIndex("SemesterId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Teacher", b =>
+                {
+                    b.Property<string>("TeacherId")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("TeacherId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Teachers");
+                });
+
             modelBuilder.Entity("StudentEnrollmentSystem.Models.TeachingEvaluation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AdditionalComments")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("AreasForImprovement")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<int>("CommunicationSkills")
                         .HasColumnType("int");
@@ -539,7 +581,7 @@ namespace StudentEnrollmentSystem.Migrations
 
                     b.Property<string>("InstructorName")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("LearningMaterials")
                         .HasColumnType("int");
@@ -547,14 +589,14 @@ namespace StudentEnrollmentSystem.Migrations
                     b.Property<string>("Strengths")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("StudentId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TeachingEffectiveness")
                         .HasColumnType("int");
@@ -574,19 +616,99 @@ namespace StudentEnrollmentSystem.Migrations
                     b.ToTable("TeachingEvaluations");
                 });
 
-            modelBuilder.Entity("CourseCourse", b =>
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.User", b =>
                 {
-                    b.HasOne("StudentEnrollmentSystem.Models.Course", null)
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasOne("StudentEnrollmentSystem.Models.Course", null)
-                        .WithMany()
-                        .HasForeignKey("PrerequisiteCoursesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Fullname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfilePicturePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -600,7 +722,7 @@ namespace StudentEnrollmentSystem.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("StudentEnrollmentSystem.Models.ApplicationUser", null)
+                    b.HasOne("StudentEnrollmentSystem.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -609,7 +731,7 @@ namespace StudentEnrollmentSystem.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("StudentEnrollmentSystem.Models.ApplicationUser", null)
+                    b.HasOne("StudentEnrollmentSystem.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -624,7 +746,7 @@ namespace StudentEnrollmentSystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StudentEnrollmentSystem.Models.ApplicationUser", null)
+                    b.HasOne("StudentEnrollmentSystem.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -633,11 +755,61 @@ namespace StudentEnrollmentSystem.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("StudentEnrollmentSystem.Models.ApplicationUser", null)
+                    b.HasOne("StudentEnrollmentSystem.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Course", b =>
+                {
+                    b.HasOne("StudentEnrollmentSystem.Models.ProgramStudy", "ProgramStudy")
+                        .WithMany("Courses")
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudentEnrollmentSystem.Models.Teacher", "Teacher")
+                        .WithMany("Courses")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProgramStudy");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.CoursePrerequisite", b =>
+                {
+                    b.HasOne("StudentEnrollmentSystem.Models.Course", "Course")
+                        .WithMany("PrerequisiteCourses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StudentEnrollmentSystem.Models.Course", null)
+                        .WithMany("CoursesRequiringThis")
+                        .HasForeignKey("CourseId1");
+
+                    b.HasOne("StudentEnrollmentSystem.Models.Course", "PrerequisiteCourses")
+                        .WithMany()
+                        .HasForeignKey("PrerequisiteCourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StudentEnrollmentSystem.Models.Semester", "Semester")
+                        .WithMany()
+                        .HasForeignKey("SemesterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("PrerequisiteCourses");
+
+                    b.Navigation("Semester");
                 });
 
             modelBuilder.Entity("StudentEnrollmentSystem.Models.CourseSchedule", b =>
@@ -645,7 +817,7 @@ namespace StudentEnrollmentSystem.Migrations
                     b.HasOne("StudentEnrollmentSystem.Models.Course", "Course")
                         .WithMany("CourseSchedules")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -653,10 +825,10 @@ namespace StudentEnrollmentSystem.Migrations
 
             modelBuilder.Entity("StudentEnrollmentSystem.Models.Enquiry", b =>
                 {
-                    b.HasOne("StudentEnrollmentSystem.Models.ApplicationUser", "Student")
+                    b.HasOne("StudentEnrollmentSystem.Models.Student", "Student")
                         .WithMany("Enquiries")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Student");
@@ -664,21 +836,48 @@ namespace StudentEnrollmentSystem.Migrations
 
             modelBuilder.Entity("StudentEnrollmentSystem.Models.Enrollment", b =>
                 {
-                    b.HasOne("StudentEnrollmentSystem.Models.Course", "Course")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("CourseId")
+                    b.HasOne("StudentEnrollmentSystem.Models.ProgramStudy", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StudentEnrollmentSystem.Models.ApplicationUser", "Student")
+                    b.HasOne("StudentEnrollmentSystem.Models.Semester", "Semester")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("SemesterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudentEnrollmentSystem.Models.Student", "Student")
                         .WithMany("Enrollments")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Course");
+                    b.Navigation("Program");
+
+                    b.Navigation("Semester");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.EnrollmentCourse", b =>
+                {
+                    b.HasOne("StudentEnrollmentSystem.Models.Course", "Course")
+                        .WithMany("EnrollmentCourses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StudentEnrollmentSystem.Models.Enrollment", "Enrollment")
+                        .WithMany("EnrollmentCourses")
+                        .HasForeignKey("EnrollmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Enrollment");
                 });
 
             modelBuilder.Entity("StudentEnrollmentSystem.Models.Payment", b =>
@@ -686,13 +885,13 @@ namespace StudentEnrollmentSystem.Migrations
                     b.HasOne("StudentEnrollmentSystem.Models.Enrollment", "Enrollment")
                         .WithMany("Payments")
                         .HasForeignKey("EnrollmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("StudentEnrollmentSystem.Models.ApplicationUser", "Student")
+                    b.HasOne("StudentEnrollmentSystem.Models.Student", "Student")
                         .WithMany("Payments")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Enrollment");
@@ -700,18 +899,67 @@ namespace StudentEnrollmentSystem.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.PaymentHistory", b =>
+                {
+                    b.HasOne("StudentEnrollmentSystem.Models.Payment", "Payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Payment");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Student", b =>
+                {
+                    b.HasOne("StudentEnrollmentSystem.Models.ProgramStudy", "ProgramStudy")
+                        .WithMany("Students")
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StudentEnrollmentSystem.Models.Semester", "Semester")
+                        .WithMany("Students")
+                        .HasForeignKey("SemesterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StudentEnrollmentSystem.Models.User", "User")
+                        .WithOne()
+                        .HasForeignKey("StudentEnrollmentSystem.Models.Student", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProgramStudy");
+
+                    b.Navigation("Semester");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Teacher", b =>
+                {
+                    b.HasOne("StudentEnrollmentSystem.Models.User", "User")
+                        .WithOne()
+                        .HasForeignKey("StudentEnrollmentSystem.Models.Teacher", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("StudentEnrollmentSystem.Models.TeachingEvaluation", b =>
                 {
                     b.HasOne("StudentEnrollmentSystem.Models.Course", "Course")
                         .WithMany()
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("StudentEnrollmentSystem.Models.ApplicationUser", "Student")
+                    b.HasOne("StudentEnrollmentSystem.Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -719,7 +967,39 @@ namespace StudentEnrollmentSystem.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("StudentEnrollmentSystem.Models.ApplicationUser", b =>
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Course", b =>
+                {
+                    b.Navigation("CourseSchedules");
+
+                    b.Navigation("CoursesRequiringThis");
+
+                    b.Navigation("EnrollmentCourses");
+
+                    b.Navigation("PrerequisiteCourses");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Enrollment", b =>
+                {
+                    b.Navigation("EnrollmentCourses");
+
+                    b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.ProgramStudy", b =>
+                {
+                    b.Navigation("Courses");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Semester", b =>
+                {
+                    b.Navigation("Enrollments");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Student", b =>
                 {
                     b.Navigation("Enquiries");
 
@@ -728,16 +1008,9 @@ namespace StudentEnrollmentSystem.Migrations
                     b.Navigation("Payments");
                 });
 
-            modelBuilder.Entity("StudentEnrollmentSystem.Models.Course", b =>
+            modelBuilder.Entity("StudentEnrollmentSystem.Models.Teacher", b =>
                 {
-                    b.Navigation("CourseSchedules");
-
-                    b.Navigation("Enrollments");
-                });
-
-            modelBuilder.Entity("StudentEnrollmentSystem.Models.Enrollment", b =>
-                {
-                    b.Navigation("Payments");
+                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }
