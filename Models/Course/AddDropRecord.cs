@@ -1,28 +1,31 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+using StudentEnrollmentSystem.Models;
 
-namespace StudentEnrollmentSystem.Models
+namespace Entityonlineform.Models
 {
-    public class Enrollment
+    public class AddDropRecord
     {
         [Key]
-        public int EnrollmentId { get; set; }
+        public int AddDropId { get; set; }
         
         [Required]
-        [ForeignKey("StudentId")]
         public string StudentId { get; set; }
         
         [Required]
         public int CourseId { get; set; }
         
         [Required]
-        public DateTime EnrollmentDate { get; set; } = DateTime.Now;
+        public string Action { get; set; } = string.Empty; // "Add" or "Drop"
         
-        public string Status { get; set; } = "Enrolled"; // Enrolled, Dropped, Completed
+        [Required]
+        public DateTime ActionDate { get; set; } = DateTime.Now;
+        
+        [StringLength(500)]
+        public string? Reason { get; set; }
         
         // Navigation properties
-        [JsonIgnore]
+        [ForeignKey("StudentId")]
         public virtual Student? Student { get; set; }
         
         [ForeignKey("CourseId")]

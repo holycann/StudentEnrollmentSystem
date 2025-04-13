@@ -25,8 +25,7 @@ public class Semester
     public DateTime EndDate { get; set; }
 
     [JsonIgnore]
-    public virtual ICollection<Student> Students { get; set; } = new HashSet<Student>();
-
+    public virtual ICollection<Course> Courses { get; set; } = new HashSet<Course>();
     [JsonIgnore]
-    public virtual ICollection<Enrollment> Enrollments { get; set; } = new HashSet<Enrollment>();
+    public virtual ICollection<Student> Students { get; set; } = new HashSet<Student>();
 }

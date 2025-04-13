@@ -25,27 +25,13 @@
                     <label class="block text-gray-700 font-medium mb-2">Email</label>
                     <p class="text-gray-900">@Model.Email</p>
                 </div>
+                <div class="mb-4"></div>
+                <label class="block text-gray-700 font-medium mb-2">Program Name</label>
+                <p class="text-gray-900">@Model.ProgramName</p>
             </div>
-
-            <!-- Enrollment Data Section -->
-            <div class="mb-8">
-                <h2 class="text-lg font-semibold text-gray-500 mb-4">Enrollment Data</h2>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium mb-2">Enrollment Date</label>
-                    <p class="text-gray-900">@Model.EnrollmentDate.ToString("dd MMM, yyyy HH:mm")</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium mb-2">Total Credits</label>
-                    <p class="text-gray-900">@Model.EnrollmentCourses.Sum(c => c.Course.Credits)</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium mb-2">Program Name</label>
-                    <p class="text-gray-900">@Model.ProgramName</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium mb-2">Semester</label>
-                    <p class="text-gray-900">@Model.SemesterName</p>
-                </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 font-medium mb-2">Semester</label>
+                <p class="text-gray-900">@Model.SemesterName</p>
             </div>
         </div>
 
@@ -74,16 +60,11 @@
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium mb-2">List courses</label>
                     <ul class="list-disc list-inside text-gray-900">
-                        @foreach (var course in Model.EnrollmentCourses)
+                        @foreach (var course in Model.Courses)
                         {
-                            <li>@course.Course.Name</li>
+                            <li>@course.CourseName</li>
                         }
                     </ul>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium mb-2">Total Credits × Fee/Credit</label>
-                    <p class="text-gray-900">@Model.EnrollmentCourses.Sum(c => c.Course.Credits) × RM
-                        @Model.EnrollmentCourses.First().Course.Fee = RM @Model.Amount</p>
                 </div>
             </div>
         </div>

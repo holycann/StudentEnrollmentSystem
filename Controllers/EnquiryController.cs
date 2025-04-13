@@ -15,17 +15,14 @@ namespace StudentEnrollmentSystem.Controllers;
 public class EnquiryController : Controller
 {
     private readonly UserManager<User> _userManager;
-    private readonly IEnrollmentService _enrollmentService;
     private readonly ILogger<EnquiryController> _logger;
 
     public EnquiryController(
         UserManager<User> userManager,
-        IEnrollmentService enrollmentService,
         ILogger<EnquiryController> logger
     )
     {
         _userManager = userManager;
-        _enrollmentService = enrollmentService;
         _logger = logger;
     }
 

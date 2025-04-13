@@ -1,0 +1,109 @@
+@model StudentEnrollmentSystem.Models.ViewModels.AddDropRecordViewModel
+@{
+    ViewData["Title"] = "Add/Drop History";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<h1>Add/Drop History</h1>
+
+<div class="row mb-3">
+    <div class="col">
+        <a asp-action="AvailableCourse" class="btn btn-primary">Available Courses</a>
+        <a href="/Enrollment/MyEnrollment" class="btn btn-primary">My Enrollments</a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Student Information</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Name:</strong> @Model.CurrentStudent.User.Fullname</p>
+                <p><strong>Student ID:</strong> @Model.CurrentStudent.StudentId</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Email:</strong> @Model.CurrentStudent.User.Email</p>
+                <p><strong>Total Actions:</strong> @Model.AddDropRecords.Count</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Add Actions</h5>
+            </div>
+            <div class="card-body">
+                <h3 class="display-4 text-center">@Model.AddDropRecords.Count(r => r.Action == "Add")</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Drop Actions</h5>
+            </div>
+            <div class="card-body">
+                <h3 class="display-4 text-center">@Model.AddDropRecords.Count(r => r.Action == "Drop")</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Detailed History</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Action</th>
+                        <th>Date</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.AddDropRecords.Any())
+                    {
+                        @foreach (var record in Model.AddDropRecords)
+                        {
+                            <tr>
+                                <td>@record.Course?.CourseCode</td>
+                                <td>@record.Course?.CourseName</td>
+                                <td>
+                                    @if (record.Action == "Add")
+                                    {
+                                        <span class="badge bg-success">Add</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Drop</span>
+                                    }
+                                </td>
+                                <td>@record.ActionDate.ToString("MM/dd/yyyy hh:mm tt")</td>
+                                <td>@record.Reason</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No add/drop history found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

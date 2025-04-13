@@ -16,10 +16,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
-builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
-builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
-builder.Services.AddScoped<IEnquiryService, EnquiryService>();
 builder.Services.AddScoped<IProgramService, ProgramService>();
 builder.Services.AddScoped<ISemesterService, SemesterService>();
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Entityonlineform.Models;
 using Microsoft.EntityFrameworkCore;
 using StudentEnrollmentSystem.Models;
 using StudentEnrollmentSystem.Models.Enums;
@@ -174,115 +175,50 @@ namespace StudentEnrollmentSystem.Data
 
             if (!context.Courses.Any())
             {
+                var rand = new Random();
                 var courses = new List<Course>
                 {
-                    new Course
-                    {
-                        CourseCode = "CS101",
-                        Name = "Introduction to Computer Science",
-                        Description = "Basic concepts of computer science.",
-                        Credits = 3,
-                        FeePerCredit = 50,
-                        ProgramId = programStudiesList[0].Id,
-                        TeacherId = teachersList[0].TeacherId,
-                    },
-                    new Course
-                    {
-                        CourseCode = "IT201",
-                        Name = "Information Systems",
-                        Description = "Study of information systems.",
-                        Credits = 3,
-                        FeePerCredit = 100,
-                        ProgramId = programStudiesList[1].Id,
-                        TeacherId = teachersList[1].TeacherId,
-                    },
-                    new Course
-                    {
-                        CourseCode = "SE301",
-                        Name = "Software Development",
-                        Description = "Principles of software development.",
-                        Credits = 3,
-                        FeePerCredit = 50,
-                        ProgramId = programStudiesList[2].Id,
-                        TeacherId = teachersList[1].TeacherId,
-                    },
-                    new Course
-                    {
-                        CourseCode = "DS401",
-                        Name = "Data Analysis",
-                        Description = "Techniques for data analysis.",
-                        Credits = 3,
-                        FeePerCredit = 100,
-                        ProgramId = programStudiesList[3].Id,
-                        TeacherId = teachersList[0].TeacherId,
-                    },
+                   // Computer Science Courses
+                new Course {CourseName = "Introduction to Computer Science", CourseCode = "CS101", Credits = 3, Capacity = 30, EnrolledCount = 0, Description = "An introductory course to computer science principles", SemesterId = 1 },
+                new Course {CourseName = "Data Structures and Algorithms", CourseCode = "CS201", Credits = 4, Capacity = 25, EnrolledCount = 0, Description = "Study of data structures and algorithms", SemesterId = 1 },
+                new Course {CourseName = "Database Systems", CourseCode = "CS301", Credits = 3, Capacity = 20, EnrolledCount = 0, Description = "Introduction to database design and implementation", SemesterId = 1 },
+                new Course {CourseName = "Web Development", CourseCode = "CS310", Credits = 3, Capacity = 25, EnrolledCount = 0, Description = "Introduction to web development technologies and frameworks", SemesterId = 2 },
+                new Course {CourseName = "Operating Systems", CourseCode = "CS320", Credits = 4, Capacity = 20, EnrolledCount = 0, Description = "Study of operating system principles and design", SemesterId = 2 },
+                new Course {CourseName = "Computer Networks", CourseCode = "CS330", Credits = 3, Capacity = 22, EnrolledCount = 0, Description = "Introduction to computer networking concepts and protocols", SemesterId = 2 },
+                new Course {CourseName = "Artificial Intelligence", CourseCode = "CS401", Credits = 4, Capacity = 18, EnrolledCount = 0, Description = "Introduction to artificial intelligence concepts and algorithms", SemesterId = 3 },
+                new Course {CourseName = "Machine Learning", CourseCode = "CS410", Credits = 4, Capacity = 15, EnrolledCount = 0, Description = "Study of machine learning algorithms and applications", SemesterId = 3 },
+
+                // Mathematics Courses
+                new Course {CourseName = "Calculus I", CourseCode = "MATH101", Credits = 4, Capacity = 35, EnrolledCount = 0, Description = "Introduction to differential calculus", SemesterId = 1 },
+                new Course { CourseName = "Calculus II", CourseCode = "MATH102", Credits = 4, Capacity = 30, EnrolledCount = 0, Description = "Introduction to integral calculus", SemesterId = 1 },
+                new Course { CourseName = "Linear Algebra", CourseCode = "MATH201", Credits = 3, Capacity = 25, EnrolledCount = 0, Description = "Study of vector spaces and linear transformations", SemesterId = 1 },
+                new Course { CourseName = "Discrete Mathematics", CourseCode = "MATH210", Credits = 3, Capacity = 28, EnrolledCount = 0, Description = "Mathematical structures that are fundamentally discrete", SemesterId = 1 },
+
+                // Business Courses
+                new Course { CourseName = "Introduction to Business", CourseCode = "BUS101", Credits = 3, Capacity = 40, EnrolledCount = 0, Description = "Overview of business concepts and practices", SemesterId = 1 },
+                new Course { CourseName = "Principles of Marketing", CourseCode = "BUS201", Credits = 3, Capacity = 35, EnrolledCount = 0, Description = "Introduction to marketing concepts and strategies", SemesterId = 1 },
+                new Course { CourseName = "Financial Accounting", CourseCode = "BUS210", Credits = 3, Capacity = 30, EnrolledCount = 0, Description = "Introduction to financial accounting principles", SemesterId = 1 },
+
+                // Science Courses
+                new Course { CourseName = "General Physics I", CourseCode = "PHYS101", Credits = 4, Capacity = 30, EnrolledCount = 0, Description = "Introduction to mechanics and thermodynamics", SemesterId = 1 },
+                new Course { CourseName = "General Chemistry I", CourseCode = "CHEM101", Credits = 4, Capacity = 28, EnrolledCount = 0, Description = "Introduction to chemical principles and reactions", SemesterId = 1 },
+                new Course { CourseName = "Introduction to Biology", CourseCode = "BIO101", Credits = 4, Capacity = 32, EnrolledCount = 0, Description = "Introduction to biological concepts and principles", SemesterId = 1 },
+
+                // Humanities Courses
+                new Course { CourseName = "Introduction to Philosophy", CourseCode = "PHIL101", Credits = 3, Capacity = 35, EnrolledCount = 0, Description = "Introduction to philosophical concepts and thinking", SemesterId = 1 },
+                new Course { CourseName = "World History", CourseCode = "HIST101", Credits = 3, Capacity = 40, EnrolledCount = 0, Description = "Survey of major historical events and developments", SemesterId = 1 }
                 };
+
+                foreach (var course in courses)
+                {
+                    course.Fee = rand.Next(500, 2001);
+                    course.ProgramStudyId = programStudiesList[rand.Next(programStudiesList.Count)].Id;
+                }
+
                 context.Courses.AddRange(courses);
                 context.SaveChanges();
             }
             var coursesList = context.Courses.ToList();
-
-            if (!context.CoursePrerequisites.Any())
-            {
-                var prerequisites = new List<CoursePrerequisite>
-                {
-                    new CoursePrerequisite
-                    {
-                        CourseId = coursesList[1].Id,
-                        PrerequisiteCourseId = coursesList[0].Id,
-                        SemesterId = semestersList[0].Id,
-                    }, // IT201 membutuhkan CS101
-                    new CoursePrerequisite
-                    {
-                        CourseId = coursesList[2].Id,
-                        PrerequisiteCourseId = coursesList[1].Id,
-                        SemesterId = semestersList[0].Id,
-                    }, // SE301 membutuhkan IT201
-                };
-                context.CoursePrerequisites.AddRange(prerequisites);
-                context.SaveChanges();
-            }
-
-            if (!context.CourseSchedules.Any())
-            {
-                var schedules = new List<CourseSchedule>
-                {
-                    new CourseSchedule
-                    {
-                        CourseId = coursesList[0].Id,
-                        DayOfWeek = DayOfWeek.Monday,
-                        StartTime = TimeSpan.FromHours(9),
-                        EndTime = TimeSpan.FromHours(11),
-                        Room = "Room 1",
-                    },
-                    new CourseSchedule
-                    {
-                        CourseId = coursesList[1].Id,
-                        DayOfWeek = DayOfWeek.Tuesday,
-                        StartTime = TimeSpan.FromHours(10),
-                        EndTime = TimeSpan.FromHours(12),
-                        Room = "Room 2",
-                    },
-                    new CourseSchedule
-                    {
-                        CourseId = coursesList[2].Id,
-                        DayOfWeek = DayOfWeek.Wednesday,
-                        StartTime = TimeSpan.FromHours(13),
-                        EndTime = TimeSpan.FromHours(15),
-                        Room = "Room 3",
-                    },
-                    new CourseSchedule
-                    {
-                        CourseId = coursesList[3].Id,
-                        DayOfWeek = DayOfWeek.Thursday,
-                        StartTime = TimeSpan.FromHours(14),
-                        EndTime = TimeSpan.FromHours(16),
-                        Room = "Room 4",
-                    },
-                };
-                context.CourseSchedules.AddRange(schedules);
-                context.SaveChanges();
-            }
 
             if (!context.Students.Any())
             {
@@ -312,142 +248,130 @@ namespace StudentEnrollmentSystem.Data
             }
             var studentsList = context.Students.ToList();
 
+            if (!context.AddDropRecords.Any())
+            {
+                var addDropRecords = new List<AddDropRecord>
+                {
+                    new AddDropRecord
+                    {
+                        StudentId = "S002",
+                        CourseId = coursesList[0].CourseId,
+                        Action = "Add",
+                        ActionDate = DateTime.Now,
+                        Reason = "Enrolled in the course",
+                    },
+                    new AddDropRecord
+                    {
+                        StudentId = "S002",
+                        CourseId = coursesList[1].CourseId,
+                        Action = "Add",
+                        ActionDate = DateTime.Now,
+                        Reason = "Enrolled in the course",
+                    },
+                    new AddDropRecord
+                    {
+                        StudentId = "S001",
+                        CourseId = coursesList[2].CourseId,
+                        Action = "Drop",
+                        ActionDate = DateTime.Now,
+                        Reason = "Dropped the course",
+                    },
+                    new AddDropRecord
+                    {
+                        StudentId = "S001",
+                        CourseId = coursesList[3].CourseId,
+                        Action = "Add",
+                        ActionDate = DateTime.Now,
+                        Reason = "Enrolled in the course",
+                    },
+                    new AddDropRecord
+                    {
+                        StudentId = "S001",
+                        CourseId = coursesList[4].CourseId,
+                        Action = "Add",
+                        ActionDate = DateTime.Now,
+                        Reason = "Enrolled in the course",
+                    },
+                    new AddDropRecord
+                    {
+                        StudentId = "S001",
+                        CourseId = coursesList[5].CourseId,
+                        Action = "Drop",
+                        ActionDate = DateTime.Now,
+                        Reason = "Dropped the course",
+                    },
+                };
+                context.AddDropRecords.AddRange(addDropRecords);
+                context.SaveChanges();
+            }
+
             if (!context.Enrollments.Any())
             {
                 var enrollments = new List<Enrollment>
                 {
                     new Enrollment
                     {
-                        StudentId = studentsList[0].StudentId,
-                        ProgramId = programStudiesList[0].Id,
-                        SemesterId = semestersList[0].Id,
-                        TotalCredits = coursesList[0].Credits + coursesList[1].Credits,
-                        EnrollmentDate = DateTime.UtcNow,
-                        Status = EnrollmentStatus.Pending,
+                        StudentId = "S002",
+                        CourseId = coursesList[0].CourseId,
+                        EnrollmentDate = DateTime.Now,
+                        Status = "Enrolled",
                     },
                     new Enrollment
                     {
-                        StudentId = studentsList[1].StudentId,
-                        ProgramId = programStudiesList[1].Id,
-                        SemesterId = semestersList[1].Id,
-                        TotalCredits = coursesList[0].Credits + coursesList[1].Credits,
-                        EnrollmentDate = DateTime.UtcNow,
-                        Status = EnrollmentStatus.Completed,
+                        StudentId = "S002",
+                        CourseId = coursesList[1].CourseId,
+                        EnrollmentDate = DateTime.Now,
+                        Status = "Enrolled",
                     },
                     new Enrollment
                     {
-                        StudentId = studentsList[1].StudentId,
-                        ProgramId = programStudiesList[1].Id,
-                        SemesterId = semestersList[1].Id,
-                        TotalCredits = coursesList[2].Credits + coursesList[3].Credits,
-                        EnrollmentDate = DateTime.UtcNow,
-                        Status = EnrollmentStatus.Pending,
+                        StudentId = "S001",
+                        CourseId = coursesList[2].CourseId,
+                        EnrollmentDate = DateTime.Now,
+                        Status = "Dropped",
+                    },
+                    new Enrollment
+                    {
+                        StudentId = "S001",
+                        CourseId = coursesList[3].CourseId,
+                        EnrollmentDate = DateTime.Now,
+                        Status = "Enrolled",
+                    },
+                    new Enrollment
+                    {
+                        StudentId = "S001",
+                        CourseId = coursesList[4].CourseId,
+                        EnrollmentDate = DateTime.Now,
+                        Status = "Enrolled",
+                    },
+                    new Enrollment
+                    {
+                        StudentId = "S001",
+                        CourseId = coursesList[5].CourseId,
+                        EnrollmentDate = DateTime.Now,
+                        Status = "Dropped",
                     },
                 };
                 context.Enrollments.AddRange(enrollments);
                 context.SaveChanges();
             }
-            var enrollmentsList = context.Enrollments.ToList();
 
-            if (!context.EnrollmentCourses.Any())
+            if (!context.Payments.Any())
             {
-                var enrollmentCourses = new List<EnrollmentCourse>
+                var payments = new List<Payment>
                 {
-                    new EnrollmentCourse
+                    new Payment
                     {
-                        EnrollmentId = enrollmentsList[0].Id,
-                        CourseId = coursesList[0].Id,
-                    },
-                    new EnrollmentCourse
-                    {
-                        EnrollmentId = enrollmentsList[0].Id,
-                        CourseId = coursesList[1].Id,
-                    },
-                    new EnrollmentCourse
-                    {
-                        EnrollmentId = enrollmentsList[1].Id,
-                        CourseId = coursesList[0].Id,
-                    },
-                    new EnrollmentCourse
-                    {
-                        EnrollmentId = enrollmentsList[1].Id,
-                        CourseId = coursesList[1].Id,
-                    },
-                    new EnrollmentCourse
-                    {
-                        EnrollmentId = enrollmentsList[2].Id,
-                        CourseId = coursesList[2].Id,
-                    },
-                    new EnrollmentCourse
-                    {
-                        EnrollmentId = enrollmentsList[2].Id,
-                        CourseId = coursesList[3].Id,
-                    },
+                        StudentId = "S002",
+                        SemesterId = semestersList[0].Id,
+                        Amount = 1000,
+                        PaymentMethod = PaymentMethod.Cards,
+                        Status = PaymentStatus.Pending,
+                    }
                 };
-                context.EnrollmentCourses.AddRange(enrollmentCourses);
+                context.Payments.AddRange(payments);
                 context.SaveChanges();
             }
-
-            // if (!context.Payments.Any())
-            // {
-            //     var payments = new List<Payment>
-            //     {
-            //         new Payment
-            //         {
-            //             StudentId = studentsList[0].StudentId,
-            //             EnrollmentId = enrollmentsList[0].Id,
-            //             Amount = 100,
-            //             PaymentDate = DateTime.UtcNow,
-            //             PaymentMethod = PaymentMethod.CreditCard,
-            //             Status = PaymentStatus.Completed,
-            //         },
-            //         new Payment
-            //         {
-            //             StudentId = studentsList[1].StudentId,
-            //             EnrollmentId = enrollmentsList[0].Id,
-            //             Amount = 100,
-            //             PaymentMethod = PaymentMethod.CreditCard,
-            //             PaymentDate = null,
-            //             Status = PaymentStatus.Pending,
-            //         },
-            //     };
-
-            //     Console.WriteLine($"Payment Date: {payments[1].PaymentDate}"); // cek isinya null atau tidak
-
-            //     context.Payments.AddRange(payments);
-            //     context.SaveChanges();
-            // }
-
-            // if (!context.Enquiries.Any())
-            // {
-            //     var enquiries = new List<Enquiry>
-            //     {
-            //         new Enquiry
-            //         {
-            //             StudentId = studentsList[0].StudentId,
-            //             Name = "Student 1",
-            //             Email = "student1@example.com",
-            //             Subject = "Computer Science",
-            //             Message = "What are the prerequisites for CS101?",
-            //             SubmissionDate = DateTime.UtcNow,
-            //             Status = EnquiryStatus.Pending,
-            //             Response = "No prerequisites.",
-            //         },
-            //         new Enquiry
-            //         {
-            //             StudentId = studentsList[1].StudentId,
-            //             Name = "Student 2",
-            //             Email = "student2@example.com",
-            //             Subject = "Information Technology",
-            //             Message = "How do I enroll in courses?",
-            //             SubmissionDate = DateTime.UtcNow,
-            //             Status = EnquiryStatus.Pending,
-            //             Response = "You can enroll through the student portal.",
-            //         },
-            //     };
-            //     context.Enquiries.AddRange(enquiries);
-            //     context.SaveChanges();
-            // }
         }
     }
 }

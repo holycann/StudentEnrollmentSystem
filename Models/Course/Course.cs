@@ -7,38 +7,34 @@ namespace StudentEnrollmentSystem.Models;
 public class Course
 {
     [Key]
-    public int Id { get; set; }
+    public int CourseId { get; set; }
 
     [Required]
     [StringLength(100)]
+    public string CourseName { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(20)]
     public string CourseCode { get; set; } = string.Empty;
 
-    [Required]
-    [StringLength(255)]
-    public string Name { get; set; } = string.Empty;
+    [StringLength(500)]
+    public string? Description { get; set; }
 
-    public string Description { get; set; } = string.Empty;
     public int Credits { get; set; }
-    public decimal FeePerCredit { get; set; }
+    public decimal Fee { get; set; }
 
-    // Foreign Key ke Teacher
-    [ForeignKey("Teacher")]
-    public string TeacherId { get; set; }
-    public virtual Teacher Teacher { get; set; } = null!;
+    [ForeignKey("Semester")]
+    public int SemesterId  { get; set; }
 
-    [Required]
-    public int ProgramId { get; set; }
-    [ForeignKey("ProgramId")]
-    [JsonIgnore]
-    public virtual ProgramStudy ProgramStudy { get; set; } = null!;
+    [ForeignKey("ProgramStudy")]
+    public int ProgramStudyId  { get; set; }
 
-    [JsonIgnore]
-    public virtual ICollection<EnrollmentCourse> EnrollmentCourses { get; set; } =
-        new HashSet<EnrollmentCourse>();
-    public virtual ICollection<CourseSchedule> CourseSchedules { get; set; } =
-        new HashSet<CourseSchedule>();
-    public virtual ICollection<CoursePrerequisite> PrerequisiteCourses { get; set; } =
-        new HashSet<CoursePrerequisite>();
-    public virtual ICollection<CoursePrerequisite> CoursesRequiringThis { get; set; } =
-        new HashSet<CoursePrerequisite>();
+    public int Capacity { get; set; }
+
+    public int EnrolledCount { get; set; }
+
+    public bool IsActive { get; set; } = true;
+
+    // Navigation property
+    public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 }

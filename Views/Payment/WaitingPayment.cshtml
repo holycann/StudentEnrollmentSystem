@@ -61,7 +61,7 @@
                         PROGRAM
                     </h2>
                     <p class="text-gray-800 font-semibold">
-                        @Model.Payment.ProgramName
+                        @Model.MakePaymentViewModel.ProgramName
                     </p>
                 </div>
                 <div class="mb-4">
@@ -69,26 +69,26 @@
                         SEMESTER
                     </h2>
                     <p class="text-gray-800 font-semibold">
-                        @Model.Payment.SemesterName
+                        @Model.MakePaymentViewModel.SemesterName
                     </p>
                 </div>
 
                 <h2 class="text-gray-600 text-sm font-semibold mb-4">
                     COURSE LIST
                 </h2>
-                @foreach (var course in Model.Payment.Enrollment.EnrollmentCourses)
+                @foreach (var course in Model.MakePaymentViewModel.Courses)
                 {
                     <div class="mb-4">
                         <div class="flex justify-between items-center mb-2">
                             <p class="text-gray-800 font-semibold">
-                                @course.Course.Name
+                                @course.CourseName
                             </p>
                             <p class="text-gray-800">
-                                @course.Course.Credits Credits
+                                @course.Credits Credits
                             </p>
                         </div>
                         <p class="text-gray-600 text-right">
-                            RM @course.Course.Fee per credit
+                            RM @course.Fee per credit
                         </p>
                     </div>
                 }
@@ -97,7 +97,7 @@
                         Total Cost:
                     </p>
                     <p class="text-gray-800 font-semibold">
-                        RM @Model.Payment.Amount
+                        RM @Model.MakePaymentViewModel.Amount
                     </p>
                 </div>
             </div>

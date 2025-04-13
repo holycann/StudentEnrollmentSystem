@@ -8,7 +8,7 @@
     <form asp-action="ProcessPayment" asp-controller="Payment" method="post"
         class="flex flex-col lg:flex-row justify-between">
         <input type="text" asp-for="StudentId" value="@Model.StudentId" hidden />
-        <input type="text" asp-for="EnrollmentId" value="@Model.EnrollmentId" hidden />
+        <input type="text" asp-for="SemesterId" value="@Model.SemesterId" hidden />
         <input type="text" asp-for="ProgramName" value="@Model.ProgramName" hidden />
         <input type="text" asp-for="SemesterName" value="@Model.SemesterName" hidden />
         <input type="text" asp-for="Amount" value="@Model.Amount" hidden />
@@ -79,18 +79,18 @@
                 <p class="text-gray-700"><strong>Program:</strong> @Model.ProgramName</p>
                 <p class="text-gray-700"><strong>Course List:</strong></p>
                 <ul class="list-disc list-inside text-gray-700">
-                    @foreach (var course in Model.Enrollment.EnrollmentCourses)
+                    @foreach (var course in Model.Courses)
                     {
-                        <li>@course.Course.Name</li>
+                        <li>@course.CourseName</li>
                     }
                 </ul>
                 <p class="text-gray-700"><strong>Semester:</strong> @Model.SemesterName</p>
             </div>
             <div class="mb-4">
-                <p class="text-gray-700"><strong>Total Credits:</strong> @Model.Enrollment.TotalCredits</p>
+                <p class="text-gray-700"><strong>Total Credits:</strong> @Model.Courses.Sum(c => c.Credits)</p>
             </div>
             <div class="mb-4">
-                <p class="text-2xl text-blue-500 font-semibold">RM @Model.Enrollment.TotalFees.ToString("F2")</p>
+                <p class="text-2xl text-blue-500 font-semibold">RM @Model.Courses.Sum(c => c.Fee).ToString("F2")</p>
             </div>
             <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold">MAKE PAYMENT<i
                     class="fas fa-arrow-right ml-2"></i></button>

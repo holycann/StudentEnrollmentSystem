@@ -1,0 +1,166 @@
+@model StudentEnrollmentSystem.Models.ViewModels.EnrollmentViewModel
+@{
+    ViewData["Title"] = "My Enrollments";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<h1>My Enrollments</h1>
+
+<div class="row mb-3">
+    <div class="col">
+        <a href="/Courses/AvailableCourse" class="btn btn-primary">Available Courses</a>
+        <a href="/Courses/History" class="btn btn-info">Add/Drop History</a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Student Information</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Name:</strong> @Model.CurrentStudent.User.Fullname</p>
+                <p><strong>Student ID:</strong> @Model.CurrentStudent.StudentId</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Email:</strong> @Model.CurrentStudent.User.Email</p>
+                <p><strong>Total Enrollments:</strong> @Model.Enrollments.Count</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Total Credits</h5>
+            </div>
+            <div class="card-body">
+                <h3 class="display-4">@Model.Enrollments.Sum(e => e.Course?.Credits ?? 0)</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Enrollment Summary</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Enrollments.Any())
+                {
+                    <div class="row">
+                        @foreach (var dept in Model.Enrollments.GroupBy(e => e.Course?.CourseCode.Substring(0, Math.Min(4, e.Course.CourseCode.Length))))
+                        {
+                            <div class="col-md-4 mb-2">
+                                <div class="card">
+                                    <div class="card-body p-2 text-center">
+                                        <h6>@GetDepartmentName(dept.Key)</h6>
+                                        <span class="badge bg-primary">@dept.Count() courses</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-center">You are not enrolled in any courses.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Current Enrollments</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Credits</th>
+                        <th>Enrollment Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Enrollments.Any())
+                    {
+                        @foreach (var enrollment in Model.Enrollments)
+                        {
+                            <tr>
+                                <td>@enrollment.Course?.CourseCode</td>
+                                <td>@enrollment.Course?.CourseName</td>
+                                <td>@enrollment.Course?.Credits</td>
+                                <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
+                                <td>
+                                    <form method="post" asp-controller="Enrollment" asp-action="Drop" asp-route-id="@enrollment.CourseId">
+                                        <button type="submit" class="btn btn-danger btn-sm">Drop Course</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">You are not enrolled in any courses.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+@functions {
+    public string GetDepartmentName(string code)
+    {
+        if (code == null) return "Unknown";
+        
+        switch (code)
+        {
+            case "CS":
+                return "Computer Science";
+            case "MATH":
+                return "Mathematics";
+            case "BUS":
+                return "Business";
+            case "PHYS":
+                return "Physics";
+            case "CHEM":
+                return "Chemistry";
+            case "BIO":
+                return "Biology";
+            case "PHIL":
+                return "Philosophy";
+            case "HIST":
+                return "History";
+            default:
+                return code;
+        }
+    }
+}

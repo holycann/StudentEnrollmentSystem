@@ -17,6 +17,7 @@ public interface IPaymentService
     Task<List<Payment>> GetAllPaymentsAsync();
     Task<Payment> GetPaymentByIdAsync(int id);
     Task<List<Payment>> GetPaymentsByStudentIdAsync(string studentId);
+    Task<Payment> GetPaymentsBySemesterIdAsync(string studentId, int semesterId);
     Task<(Payment payment, string message)> CreatePaymentAsync(MakePaymentViewModel model);
     Task<(bool success, string message)> UpdatePaymentAsync(Payment payment);
     Task<(Payment payment, string message)> ProcessPaymentAsync(MakePaymentViewModel model);
@@ -38,25 +39,39 @@ public class PaymentService : IPaymentService
 
     public async Task<List<Payment>> GetAllPaymentsAsync()
     {
-        return await _context.Payments.ToListAsync();
+        return await _context.Payments
+            .Include(p => p.Semester)
+            .Include(p => p.Student)
+            .ThenInclude(s => s.ProgramStudy)
+            .ToListAsync();
     }
 
     public async Task<Payment> GetPaymentByIdAsync(int id)
     {
         return await _context
-            .Payments.Include(p => p.Enrollment)
-            .ThenInclude(e => e.Program)
-            .Include(p => p.Enrollment)
-            .ThenInclude(e => e.Semester)
-            .Include(p => p.Enrollment)
-            .ThenInclude(e => e.EnrollmentCourses)
-            .ThenInclude(e => e.Course)
+            .Payments.Include(p => p.Semester)
+            .Include(p => p.Semester)
+            .Include(p => p.Student)
+            .ThenInclude(s => s.ProgramStudy)
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<List<Payment>> GetPaymentsByStudentIdAsync(string studentId)
     {
-        return await _context.Payments.Where(p => p.StudentId == studentId).ToListAsync();
+        return await _context.Payments
+            .Include(p => p.Semester)
+            .Include(p => p.Student)
+            .ThenInclude(s => s.ProgramStudy)
+            .Where(p => p.StudentId == studentId).ToListAsync();
+    }
+
+    public async Task<Payment> GetPaymentsBySemesterIdAsync(string studentId, int semesterId)
+    {
+        return await _context
+            .Payments.Include(p => p.Semester)
+            .Include(p => p.Student)
+            .ThenInclude(s => s.ProgramStudy)
+            .FirstOrDefaultAsync(p => p.StudentId == studentId && p.SemesterId == semesterId);
     }
 
     public async Task<(Payment payment, string message)> CreatePaymentAsync(
@@ -68,7 +83,7 @@ public class PaymentService : IPaymentService
             var payment = new Payment
             {
                 StudentId = model.StudentId,
-                EnrollmentId = model.Enrollment.Id,
+                SemesterId = model.SemesterId,
                 Amount = model.Amount,
                 Status = PaymentStatus.Pending,
             };
@@ -109,7 +124,7 @@ public class PaymentService : IPaymentService
         existingPayment.PaymentDate = payment.PaymentDate;
         existingPayment.PaymentMethod = payment.PaymentMethod;
         existingPayment.Amount = payment.Amount;
-        existingPayment.EnrollmentId = payment.EnrollmentId;
+        existingPayment.SemesterId = payment.SemesterId;
 
         await _context.SaveChangesAsync();
 
@@ -158,9 +173,9 @@ public class PaymentService : IPaymentService
         else if (model.PaymentMethod == PaymentMethod.BankTransfer.ToString())
         {
             if (
-                model.Student == null
-                || model.Student.BankAccountNumber == null
-                || model.Student.BankName == null
+                model.StudentViewModel == null
+                || model.StudentViewModel.BankAccountNumber == null
+                || model.StudentViewModel.BankName == null
             )
             {
                 return (null, "Bank name, account number, and account name are required");

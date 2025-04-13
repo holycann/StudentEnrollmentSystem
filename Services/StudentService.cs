@@ -46,7 +46,8 @@ namespace StudentEnrollmentSystem.Services
         public async Task<Student> GetStudentByIdAsync(string studentId)
         {
             return await _context
-                .Students.Include(s => s.Semester)
+                .Students.Include(s => s.User)
+                .Include(s => s.Semester)
                 .Include(s => s.Enrollments)
                 .Include(s => s.ProgramStudy)
                 .Include(s => s.Payments)
@@ -57,7 +58,8 @@ namespace StudentEnrollmentSystem.Services
         public async Task<Student> GetStudentByUserIdAsync(string userId)
         {
             return await _context
-                .Students.Include(s => s.Semester)
+                .Students.Include(s => s.User)
+                .Include(s => s.Semester)
                 .Include(s => s.Enrollments)
                 .Include(s => s.ProgramStudy)
                 .Include(s => s.Payments)

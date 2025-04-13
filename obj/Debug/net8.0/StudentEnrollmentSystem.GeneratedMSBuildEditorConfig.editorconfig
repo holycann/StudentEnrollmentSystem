@@ -44,12 +44,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9VcGRhdGVQcm9maWxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/Views/CourseSchedule/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ291cnNlU2NoZWR1bGUvRGV0YWlscy5jc2h0bWw=
+[/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/Views/Courses/AvailableCourse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ291cnNlcy9BdmFpbGFibGVDb3Vyc2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/Views/CourseSchedule/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ291cnNlU2NoZWR1bGUvSW5kZXguY3NodG1s
+[/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/Views/Courses/History.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ291cnNlcy9IaXN0b3J5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/Views/Enquiry/ContactSuccess.cshtml]
@@ -80,8 +80,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRW5xdWlyeS9UaW1ldGFibGVNYXRjaGluZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/Views/Enrollment/Available.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRW5yb2xsbWVudC9BdmFpbGFibGUuY3NodG1s
+[/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/Views/Enrollment/MyEnrollment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRW5yb2xsbWVudC9NeUVucm9sbG1lbnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/media/holycan/Data/INTI-Collage/Web-Application-Development/StudentEnrollmentSystem/Views/Home/Index.cshtml]

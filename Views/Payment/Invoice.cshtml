@@ -25,9 +25,8 @@
                 @foreach (var payment in Model)
                 {
                     <tr class="border-b hover:bg-gray-50">
-                        <td class="py-4 px-6 text-gray-800">@payment.EnrollmentId</td>
-                        <td class="py-4 px-6 text-gray-800">@payment.ProgramName</td>
                         <td class="py-4 px-6 text-gray-800">@payment.SemesterName</td>
+                        <td class="py-4 px-6 text-gray-800">@payment.ProgramName</td>
                         <td class="py-4 px-6 text-gray-800">@payment.PaymentMethod</td>
                         <td class="py-4 px-6 text-gray-800">@payment.ExpirationDate.ToString("dd MMM, yyyy")</td>
                         <td class="py-4 px-6 text-gray-800">@payment.Amount</td>

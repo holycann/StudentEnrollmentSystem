@@ -1,5 +1,9 @@
+using Entityonlineform.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using StudentEnrollmentSystem.Data;
 using StudentEnrollmentSystem.Models;
 using StudentEnrollmentSystem.Models.Enums;
 using StudentEnrollmentSystem.Models.ViewModels;
@@ -9,225 +13,253 @@ namespace StudentEnrollmentSystem.Controllers;
 
 public class CoursesController : Controller
 {
-    private readonly IEnrollmentService _enrollmentService;
-    private readonly ICourseService _courseService;
     private readonly IStudentService _studentService;
+    private readonly ApplicationDbContext _context;
 
     public CoursesController(
-        IEnrollmentService enrollmentService,
-        ICourseService courseService,
-        IStudentService studentService
+        IStudentService studentService,
+        ApplicationDbContext context
     )
     {
-        _enrollmentService = enrollmentService;
-        _courseService = courseService;
         _studentService = studentService;
+        _context = context;
     }
 
-    public async Task<IActionResult> Index(
-        string searchTerm,
-        string sortOrder,
-        int? creditFilter,
-        decimal? maxFee,
-        bool showAvailableOnly = false
-    )
-    {
-        var courses = await _courseService.GetAllCoursesAsync();
-
-        // // Apply filters
-        // if (!string.IsNullOrEmpty(searchTerm))
-        // {
-        //     courses = courses.Where(c =>
-        //         c.Name.Contains(searchTerm)
-        //         || c.CourseCode.Contains(searchTerm)
-        //         || c.Description.Contains(searchTerm)
-        //     );
-        // }
-
-        // if (creditFilter.HasValue)
-        // {
-        //     courses = courses.Where(c => c.Credits == creditFilter);
-        // }
-
-        // if (maxFee.HasValue)
-        // {
-        //     courses = courses.Where(c => c.Fee <= maxFee);
-        // }
-
-        // if (showAvailableOnly)
-        // {
-        //     courses = courses.Where(c => c.AvailableSeats > 0);
-        // }
-
-        // Apply sorting
-        // courses = sortOrder switch
-        // {
-        //     "name_desc" => courses.OrderByDescending(c => c.Name),
-        //     "code" => courses.OrderBy(c => c.CourseCode),
-        //     "code_desc" => courses.OrderByDescending(c => c.CourseCode),
-        //     "credits" => courses.OrderBy(c => c.Credits),
-        //     "credits_desc" => courses.OrderByDescending(c => c.Credits),
-        //     "fee" => courses.OrderBy(c => c.FeePerCredit),
-        //     "fee_desc" => courses.OrderByDescending(c => c.FeePerCredit),
-        //     _ => courses.OrderBy(c => c.Name),
-        // };
-
-        // var courses = await coursesQuery
-        //     .Select(c => new CourseViewModel
-        //     {
-        //         Id = c.Id,
-        //         CourseCode = c.CourseCode,
-        //         Name = c.Name,
-        //         Description = c.Description,
-        //         Credits = c.Credits,
-        //         MaxSeats = c.MaxSeats,
-        //         AvailableSeats = c.AvailableSeats,
-        //         Fee = c.Fee,
-        //         Prerequisites = c.Prerequisites,
-        //     })
-        //     .ToListAsync();
-
-        var viewModel = new CourseListViewModel
-        {
-            // Courses = courses,
-            SearchTerm = searchTerm,
-            SortOrder = sortOrder,
-            CreditFilter = creditFilter,
-            MaxFee = maxFee,
-            ShowAvailableOnly = showAvailableOnly,
-        };
-
-        return View(viewModel);
-    }
-
-    // public async Task<IActionResult> Details(int? id)
-    // {
-    //     if (id == null)
-    //     {
-    //         return NotFound();
-    //     }
-
-    //     var course = await _courseService.GetCourseByIdAsync(id.Value);
-    //     if (course == null)
-    //     {
-    //         return NotFound();
-    //     }
-
-    //     var viewModel = new CourseViewModel
-    //     {
-    //         Id = course.Id,
-    //         CourseCode = course.CourseCode,
-    //         Name = course.Name,
-    //         Description = course.Description,
-    //         Credits = course.Credits,
-    //         // MaxSeats = course.MaxSeats,
-    //         // AvailableSeats = course.AvailableSeats,
-    //         Fee = course.FeePerCredit,
-    //         Prerequisites = course.PrerequisiteCourses.Select(c => c.Course.CourseCode).ToList(),
-    //         PrerequisiteCourseIds = course.PrerequisiteCourses.Select(c => c.Id).ToList(),
-    //     };
-
-    //     return View(viewModel);
-    // }
-
+    [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Enroll(int? id)
+    public async Task<IActionResult> AvailableCourse(string sortOrder, string searchString, string filter)
     {
-        if (id == null)
+        var userId = HttpContext.Session.GetString("UserId");
+        var student = await _studentService.GetStudentByUserIdAsync(userId);
+
+        if (student == null)
         {
-            return NotFound();
+            return RedirectToAction("Login", "Account");
         }
 
-        var course = await _courseService.GetCourseByIdAsync(id.Value);
+        // Set up sorting
+        var model = new AvailableCourseViewModel
+        {
+            CurrentStudent = student,
+            CurrentSort = sortOrder,
+            NameSort = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "",
+            CodeSort = sortOrder == "code" ? "code_desc" : "code",
+            CreditsSort = sortOrder == "credits" ? "credits_desc" : "credits",
+            CurrentFilter = searchString ?? string.Empty,
+            CurrentDepartmentFilter = filter ?? "all"
+        };
 
+        if (_context.Courses != null)
+        {
+            // Start with all active courses
+            IQueryable<Course> coursesQuery = _context.Courses.Where(c => c.IsActive);
+
+            // Apply department filter
+            if (!string.IsNullOrEmpty(filter) && filter != "all")
+            {
+                if (filter == "CS")
+                {
+                    coursesQuery = coursesQuery.Where(c => c.CourseCode.StartsWith("CS"));
+                }
+                else if (filter == "MATH")
+                {
+                    coursesQuery = coursesQuery.Where(c => c.CourseCode.StartsWith("MATH"));
+                }
+                else if (filter == "BUS")
+                {
+                    coursesQuery = coursesQuery.Where(c => c.CourseCode.StartsWith("BUS"));
+                }
+                else if (filter == "SCI")
+                {
+                    coursesQuery = coursesQuery.Where(c =>
+                        c.CourseCode.StartsWith("PHYS") ||
+                        c.CourseCode.StartsWith("CHEM") ||
+                        c.CourseCode.StartsWith("BIO"));
+                }
+                else if (filter == "HUM")
+                {
+                    coursesQuery = coursesQuery.Where(c =>
+                        c.CourseCode.StartsWith("PHIL") ||
+                        c.CourseCode.StartsWith("HIST"));
+                }
+            }
+
+            // Apply search filter
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                coursesQuery = coursesQuery.Where(c =>
+                    c.CourseName.Contains(searchString) ||
+                    c.CourseCode.Contains(searchString) ||
+                    (c.Description != null && c.Description.Contains(searchString)));
+            }
+
+            // Apply sorting
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    coursesQuery = coursesQuery.OrderByDescending(c => c.CourseName);
+                    break;
+                case "code":
+                    coursesQuery = coursesQuery.OrderBy(c => c.CourseCode);
+                    break;
+                case "code_desc":
+                    coursesQuery = coursesQuery.OrderByDescending(c => c.CourseCode);
+                    break;
+                case "credits":
+                    coursesQuery = coursesQuery.OrderBy(c => c.Credits);
+                    break;
+                case "credits_desc":
+                    coursesQuery = coursesQuery.OrderByDescending(c => c.Credits);
+                    break;
+                default:
+                    coursesQuery = coursesQuery.OrderBy(c => c.CourseName);
+                    break;
+            }
+
+            model.Courses = await coursesQuery.ToListAsync();
+
+            model.Enrollments = await _context.Enrollments
+                .Where(e => e.StudentId == student.StudentId)
+                .ToListAsync();
+        }
+
+        return View(model);
+    }
+
+    [HttpPost("Courses/Enroll/{id}")]
+    [Authorize]
+    public async Task<IActionResult> OnPostEnrollAsync(int id)
+    {
+        var userId = HttpContext.Session.GetString("UserId");
+        var CurrentStudent = await _studentService.GetStudentByUserIdAsync(userId);
+
+        var course = await _context.Courses.FindAsync(id);
         if (course == null)
         {
             return NotFound();
         }
 
-        var userId = HttpContext.Session.GetString("UserId");
+        // Check if student is already enrolled
+        var existingEnrollment = await _context.Enrollments
+            .FirstOrDefaultAsync(e => e.StudentId == CurrentStudent.StudentId && e.CourseId == id && e.Status == "Enrolled");
 
-        var student = await _studentService.GetStudentByUserIdAsync(userId);
-        var studentEnrollments = await _enrollmentService.GetEnrollmentsByStudentIdAsync(
-            student.StudentId
-        );
-
-        // Check prerequisites
-        var missingPrerequisites = new List<string>();
-        foreach (var prereq in course.PrerequisiteCourses)
+        if (existingEnrollment != null)
         {
-            if (
-                !studentEnrollments.Any(e =>
-                    e.EnrollmentCourses.Any(ec => ec.CourseId == prereq.Id)
-                )
-            )
-            {
-                missingPrerequisites.Add($"{prereq.Course.CourseCode} - {prereq.Course.Name}");
-            }
+            TempData["ErrorMessage"] = "You are already enrolled in this course.";
+            return RedirectToAction("AvailableCourse");
         }
 
-        var viewModel = new EnrollmentRequestViewModel
+        // Check if course has capacity
+        if (course.EnrolledCount >= course.Capacity)
         {
-            CourseId = course.Id,
-            Course = new CourseViewModel
-            {
-                Id = course.Id,
-                CourseCode = course.CourseCode,
-                Name = course.Name,
-                Description = course.Description,
-                Credits = course.Credits,
-                Fee = course.FeePerCredit,
-                // AvailableSeats = course.MaxSeats - course.AvailableSeats,
-            },
-            HasPrerequisites = !missingPrerequisites.Any(),
-            MissingPrerequisites = missingPrerequisites,
-            TotalFee = course.Credits * course.FeePerCredit,
+            TempData["ErrorMessage"] = "This course is full.";
+            return View();
+        }
+
+        // Create enrollment
+        var enrollment = new Enrollment
+        {
+            StudentId = CurrentStudent.StudentId,
+            CourseId = id,
+            EnrollmentDate = DateTime.Now,
+            Status = "Enrolled"
         };
 
-        return View(viewModel);
+        _context.Enrollments.Add(enrollment);
+
+        // Create add/drop record
+        var addDropRecord = new AddDropRecord
+        {
+            StudentId = CurrentStudent.StudentId,
+            CourseId = id,
+            Action = "Add",
+            ActionDate = DateTime.Now,
+            Reason = "Online enrollment"
+        };
+
+        _context.AddDropRecords.Add(addDropRecord);
+
+        // Update course enrolled count
+        course.EnrolledCount++;
+
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Successfully enrolled in the course.";
+        return RedirectToAction("AvailableCourse");
     }
 
-    // [HttpPost]
-    // [Authorize]
-    // [ValidateAntiForgeryToken]
-    // public async Task<IActionResult> Enroll(int id)
-    // {
-    //     var course = await _courseService.GetCourseByIdAsync(id);
-    //     if (course == null)
-    //     {
-    //         return NotFound();
-    //     }
+    [HttpPost("Courses/Drop/{id}")]
+    [Authorize]
+    public async Task<IActionResult> OnPostDropAsync(int id)
+    {
+        var CurrentStudent = await _studentService.GetStudentByUserIdAsync(HttpContext.Session.GetString("UserId"));
 
-    //     var student = await _studentService.GetStudentByUserIdAsync(
-    //         HttpContext.Session.GetString("UserId")
-    //     );
+        var course = await _context.Courses.FindAsync(id);
+        if (course == null)
+        {
+            return NotFound();
+        }
 
-    //     // Check if already enrolled
-    //     var existingEnrollment = await _enrollmentService
-    //         .GetEnrollmentsByStudentIdAsync(student.StudentId)
-    //         .AnyAsync(e =>
-    //             e.CourseId == id
-    //             && e.StudentId == student.StudentId
-    //             && e.Status != EnrollmentStatus.Dropped
-    //         );
+        // Find the enrollment
+        var enrollment = await _context.Enrollments
+            .FirstOrDefaultAsync(e => e.StudentId == CurrentStudent.StudentId && e.CourseId == id && e.Status == "Enrolled");
 
-    //     if (existingEnrollment)
-    //     {
-    //         TempData["Error"] = "You are already enrolled in this course.";
-    //         return RedirectToAction(nameof(Details), new { id });
-    //     }
+        if (enrollment == null)
+        {
+            TempData["ErrorMessage"] = "You are not enrolled in this course.";
+            return RedirectToAction("AvailableCourse");
+        }
 
-    //     var enrollment = new Enrollment
-    //     {
-    //         StudentId = student.StudentId,
-    //         EnrollmentDate = DateTime.UtcNow,
-    //         Status = EnrollmentStatus.Pending,
-    //         TotalCredits = course.Credits,
-    //     };
+        // Update enrollment status
+        enrollment.Status = "Dropped";
 
-    //     await _enrollmentService.EnrollInCourseAsync(student.StudentId, course.Id);
+        // Create add/drop record
+        var addDropRecord = new AddDropRecord
+        {
+            StudentId = CurrentStudent.StudentId,
+            CourseId = id,
+            Action = "Drop",
+            ActionDate = DateTime.Now,
+            Reason = "Online drop"
+        };
 
-    //     TempData["Success"] = "You have successfully enrolled in this course.";
-    //     return RedirectToAction(nameof(Index), "Enrollment");
-    // }
+        _context.AddDropRecords.Add(addDropRecord);
+
+        // Update course enrolled count
+        course.EnrolledCount--;
+
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Successfully dropped the course.";
+        return RedirectToAction("AvailableCourse");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> History()
+    {
+        var userId = HttpContext.Session.GetString("UserId");
+
+        if (userId == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var CurrentStudent = await _studentService.GetStudentByUserIdAsync(userId);
+
+
+        var addDropRecords = await _context.AddDropRecords
+            .Include(a => a.Course)
+            .Where(a => a.StudentId == CurrentStudent.StudentId)
+            .OrderByDescending(a => a.ActionDate)
+            .ToListAsync();
+
+        var model = new AddDropRecordViewModel
+        {
+            AddDropRecords = addDropRecords,
+            CurrentStudent = CurrentStudent
+        };
+
+        return View(model);
+    }
 }

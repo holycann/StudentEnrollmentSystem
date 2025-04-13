@@ -18,29 +18,26 @@ public class PaymentController : Controller
 {
     private readonly IPaymentService _paymentService;
     private readonly IStudentService _studentService;
-    private readonly IEnrollmentService _enrollmentService;
     private readonly IUserService _userService;
     private readonly IProgramService _programService;
     private readonly ISemesterService _semesterService;
-    private readonly ICourseService _courseService;
+    private readonly ApplicationDbContext _context;
 
     public PaymentController(
         IPaymentService paymentService,
         IStudentService studentService,
         IUserService userService,
-        IEnrollmentService enrollmentService,
         IProgramService programService,
         ISemesterService semesterService,
-        ICourseService courseService
+        ApplicationDbContext context
     )
     {
         _paymentService = paymentService;
         _studentService = studentService;
         _userService = userService;
-        _enrollmentService = enrollmentService;
         _programService = programService;
         _semesterService = semesterService;
-        _courseService = courseService;
+        _context = context;
     }
 
     [HttpGet]
@@ -60,58 +57,37 @@ public class PaymentController : Controller
             return NotFound("Student Id not found");
         }
 
-        var nextEnrollmentSemester = await _enrollmentService.GetEnrollmentByNextSemesterAsync(
+        var nextSemesterPayment = await _paymentService.GetPaymentsBySemesterIdAsync(
             student.StudentId,
-            student.Semester.SemesterNumber
+            student.Semester.SemesterNumber + 1
         );
 
-        if (nextEnrollmentSemester.Status == EnrollmentStatus.Active)
+        if (nextSemesterPayment != null && nextSemesterPayment.Status == PaymentStatus.Completed)
         {
-            return NotFound("Next semester is already active");
+            return NotFound("Payment already completed");
         }
 
         var viewModel = new MakePaymentViewModel
         {
             StudentId = student.StudentId,
-            EnrollmentId = nextEnrollmentSemester.Id,
-            ProgramName = nextEnrollmentSemester.Program.Name,
-            SemesterName = nextEnrollmentSemester.Semester.Name,
-            Amount = nextEnrollmentSemester.EnrollmentCourses.Sum(ec =>
-                ec.Course.FeePerCredit * ec.Course.Credits
-            ),
-            Enrollment = new EnrollmentViewModel
-            {
-                Id = nextEnrollmentSemester.Id,
-                Status = nextEnrollmentSemester.Status,
-                TotalCredits = nextEnrollmentSemester.EnrollmentCourses.Sum(ec =>
-                    ec.Course.Credits
-                ),
-                TotalFees = nextEnrollmentSemester.EnrollmentCourses.Sum(ec =>
-                    ec.Course.FeePerCredit * ec.Course.Credits
-                ),
-                EnrollmentCourses = nextEnrollmentSemester
-                    .EnrollmentCourses.Select(ec => new EnrollmentCourseViewModel
-                    {
-                        EnrollmentId = ec.EnrollmentId,
-                        CourseId = ec.CourseId,
-                        Course = new CourseViewModel
-                        {
-                            Id = ec.CourseId,
-                            Name = ec.Course.Name,
-                            Fee = ec.Course.FeePerCredit,
-                            Credits = ec.Course.Credits,
-                        },
-                    })
-                    .ToList(),
-            },
-            Student = new StudentViewModel
+            SemesterId = student.Semester.Id + 1,
+            ProgramName = student.ProgramStudy.Name,
+            SemesterName = student.Semester.Name,
+            StudentViewModel = new StudentViewModel
             {
                 StudentId = student.StudentId,
-                ProgramName = nextEnrollmentSemester.Program.Name,
                 BankAccountNumber = student.BankAccountNumber,
                 BankName = student.BankName,
             },
         };
+
+        viewModel.Courses = await _context.Courses
+            .Where(c => c.SemesterId == student.Semester.Id && c.ProgramStudyId == student.ProgramStudy.Id)
+            .ToListAsync();
+
+        viewModel.Amount = viewModel.Courses.Sum(c => c.Fee * c.Credits);
+
+        Console.WriteLine($"Amount: {viewModel.Amount}");
 
         return View(viewModel);
     }
@@ -121,28 +97,32 @@ public class PaymentController : Controller
     {
         if (!ModelState.IsValid)
         {
-            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
             return View("MakePayment", model);
         }
 
         var student = await _studentService.GetStudentByIdAsync(model.StudentId);
-        var enrollment = await _enrollmentService.GetEnrollmentByIdAsync(model.EnrollmentId);
 
-        model.Student = new StudentViewModel
+        model.StudentViewModel = new StudentViewModel
         {
             StudentId = student.StudentId,
             BankAccountNumber = student.BankAccountNumber,
             BankName = student.BankName,
         };
-        model.Enrollment = new EnrollmentViewModel
+
+        var semester = await _semesterService.GetSemesterByIdAsync(model.SemesterId);
+
+        if (semester == null)
         {
-            Id = enrollment.Id,
-            Status = enrollment.Status,
-            TotalCredits = enrollment.EnrollmentCourses.Sum(ec => ec.Course.Credits),
-            TotalFees = enrollment.EnrollmentCourses.Sum(ec =>
-                ec.Course.FeePerCredit * ec.Course.Credits
-            ),
-        };
+            var addSemester = new Semester
+            {
+                Name = "Semester " + (student.Semester.SemesterNumber + 1),
+                SemesterNumber = student.Semester.SemesterNumber + 1,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            };
+
+            await _semesterService.AddSemesterAsync(addSemester);
+        }
 
         var (payment, message) = await _paymentService.ProcessPaymentAsync(model);
         if (payment != null)
@@ -151,7 +131,7 @@ public class PaymentController : Controller
             {
                 return RedirectToAction(
                     "WaitingPayment",
-                    new WaitingPaymentViewModel { PaymentId = payment.Id, Payment = model }
+                    new WaitingPaymentViewModel { PaymentId = payment.Id, MakePaymentViewModel = model }
                 );
             }
             else
@@ -189,36 +169,15 @@ public class PaymentController : Controller
         }
 
         model.StudentName = user.Fullname;
-        model.ExpirationDate = payment.Enrollment.EnrollmentDate.AddDays(14);
+        model.ExpirationDate = payment.Semester.StartDate.AddDays(-14);
 
-        var json = JsonConvert.SerializeObject(payment, Formatting.Indented);
-
-        model.Payment = new MakePaymentViewModel
+        model.MakePaymentViewModel = new MakePaymentViewModel
         {
             StudentId = payment.StudentId,
-            EnrollmentId = payment.EnrollmentId,
-            ProgramName = payment.Enrollment.Program.Name,
-            SemesterName = payment.Enrollment.Semester.Name,
+            SemesterId = payment.SemesterId,
+            ProgramName = payment.Student.ProgramStudy.Name,
+            SemesterName = payment.Semester.Name,
             Amount = payment.Amount,
-            Enrollment = new EnrollmentViewModel
-            {
-                Id = payment.EnrollmentId,
-                Status = payment.Enrollment.Status,
-                EnrollmentCourses = payment
-                    .Enrollment.EnrollmentCourses.Select(ec => new EnrollmentCourseViewModel
-                    {
-                        EnrollmentId = ec.EnrollmentId,
-                        CourseId = ec.CourseId,
-                        Course = new CourseViewModel
-                        {
-                            Id = ec.CourseId,
-                            Name = ec.Course.Name,
-                            Fee = ec.Course.FeePerCredit,
-                            Credits = ec.Course.Credits,
-                        },
-                    })
-                    .ToList(),
-            },
         };
 
         return View(model);
@@ -269,9 +228,6 @@ public class PaymentController : Controller
 
         var payment = await _paymentService.GetPaymentByIdAsync(id);
 
-        var json = JsonConvert.SerializeObject(payment, Formatting.Indented);
-        Console.WriteLine("Payment: " + json);
-
         if (payment == null)
         {
             return NotFound("Payment not found");
@@ -282,25 +238,8 @@ public class PaymentController : Controller
             StudentName = user.Fullname,
             StudentId = payment.StudentId,
             Email = user.Email,
-            EnrollmentId = payment.EnrollmentId,
-            ProgramName = payment.Enrollment.Program.Name,
-            SemesterName = payment.Enrollment.Semester.Name,
-            EnrollmentDate = payment.Enrollment.EnrollmentDate,
-            EnrollmentStatus = payment.Enrollment.Status,
-            EnrollmentCourses = payment
-                .Enrollment.EnrollmentCourses.Select(ec => new EnrollmentCourseViewModel
-                {
-                    EnrollmentId = ec.EnrollmentId,
-                    CourseId = ec.CourseId,
-                    Course = new CourseViewModel
-                    {
-                        Id = ec.CourseId,
-                        Name = ec.Course.Name,
-                        Fee = ec.Course.FeePerCredit,
-                        Credits = ec.Course.Credits,
-                    },
-                })
-                .ToList(),
+            ProgramName = payment.Student.ProgramStudy.Name,
+            SemesterName = payment.Semester.Name,
             PaymentId = payment.Id,
             PaymentDate = payment.PaymentDate,
             PaymentMethod = payment.PaymentMethod.ToString(),
@@ -338,8 +277,7 @@ public class PaymentController : Controller
             .Select(p => new PaymentHistoryViewModel
             {
                 PaymentId = p.Id,
-                EnrollmentId = p.EnrollmentId,
-                SemesterName = p.Enrollment.Semester.Name,
+                SemesterName = p.Semester.Name,
                 PaymentMethod = p.PaymentMethod.ToString(),
                 PaymentDate = p.PaymentDate,
                 Status = p.Status.ToString(),
@@ -368,11 +306,10 @@ public class PaymentController : Controller
             .Select(p => new PaymentInvoiceViewModel
             {
                 PaymentId = p.Id,
-                EnrollmentId = p.EnrollmentId,
-                ProgramName = p.Enrollment.Program.Name,
-                SemesterName = p.Enrollment.Semester.Name,
+                ProgramName = p.Student.ProgramStudy.Name,
+                SemesterName = p.Semester.Name,
                 PaymentMethod = p.PaymentMethod.ToString(),
-                ExpirationDate = p.Enrollment.EnrollmentDate.AddDays(14),
+                ExpirationDate = p.Semester.StartDate.AddDays(-14),
                 Amount = p.Amount,
             })
             .ToList();
@@ -392,9 +329,6 @@ public class PaymentController : Controller
 
         var payment = await _paymentService.GetPaymentByIdAsync(id);
 
-        var json = JsonConvert.SerializeObject(payment, Formatting.Indented);
-        Console.WriteLine("Payment: " + json);
-
         if (payment == null)
         {
             return NotFound("Payment not found");
@@ -405,27 +339,11 @@ public class PaymentController : Controller
             StudentName = user.Fullname,
             StudentId = payment.StudentId,
             Email = user.Email,
-            EnrollmentId = payment.EnrollmentId,
-            ProgramName = payment.Enrollment.Program.Name,
-            SemesterName = payment.Enrollment.Semester.Name,
-            EnrollmentDate = payment.Enrollment.EnrollmentDate,
-            EnrollmentCourses = payment
-                .Enrollment.EnrollmentCourses.Select(ec => new EnrollmentCourseViewModel
-                {
-                    EnrollmentId = ec.EnrollmentId,
-                    CourseId = ec.CourseId,
-                    Course = new CourseViewModel
-                    {
-                        Id = ec.CourseId,
-                        Name = ec.Course.Name,
-                        Fee = ec.Course.FeePerCredit,
-                        Credits = ec.Course.Credits,
-                    },
-                })
-                .ToList(),
+            ProgramName = payment.Student.ProgramStudy.Name,
+            SemesterName = payment.Semester.Name,
             PaymentId = payment.Id,
             PaymentMethod = payment.PaymentMethod.ToString(),
-            ExpirationDate = payment.Enrollment.EnrollmentDate.AddDays(14),
+            ExpirationDate = payment.Semester.StartDate.AddDays(-14),
             Amount = payment.Amount,
         };
         return View(viewModel);
@@ -456,7 +374,7 @@ public class PaymentController : Controller
             return NotFound("Programs not found");
         }
 
-        var courses = await _courseService.GetCoursesByProgramIdAsync(payment.Enrollment.ProgramId);
+        var courses = await _context.Courses.ToListAsync();
 
         if (courses == null)
         {
@@ -474,16 +392,15 @@ public class PaymentController : Controller
         {
             PaymentId = payment.Id,
             StudentId = payment.StudentId,
-            SemesterId = payment.Enrollment.SemesterId,
-            ProgramId = payment.Enrollment.ProgramId,
+            SemesterId = payment.SemesterId,
+            ProgramId = payment.Student.ProgramId,
             StudentName = user.Fullname,
             Email = user.Email,
-            EnrollmentDate = payment.Enrollment.EnrollmentDate,
-            ProgramName = payment.Enrollment.Program.Name,
-            SemesterName = payment.Enrollment.Semester.Name,
+            ProgramName = payment.Student.ProgramStudy.Name,
+            SemesterName = payment.Semester.Name,
             PaymentMethod = payment.PaymentMethod,
             Courses = courses
-                .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
+                .Select(c => new SelectListItem { Value = c.CourseId.ToString(), Text = c.CourseName })
                 .ToList(),
             Programs = programs
                 .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.Name })
@@ -504,8 +421,6 @@ public class PaymentController : Controller
     {
         if (!ModelState.IsValid)
         {
-            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
-            Console.WriteLine("Model in ProcessAdjustment: " + json);
             return View("Adjustment", model);
         }
 
@@ -516,29 +431,11 @@ public class PaymentController : Controller
             return NotFound("Payment not found");
         }
 
-        var courses = await _courseService.GetCoursesByIdsAsync(model.SelectedCourses);
+        var courses = await _context.Courses
+            .Where(c => model.SelectedCourses.Contains(c.CourseId))
+            .ToListAsync();
 
-        var amountPaid = courses.Sum(c => c.FeePerCredit * c.Credits);
-
-        if (
-            model.EnrollmentDate != payment.Enrollment.EnrollmentDate
-            || model.ProgramName != payment.Enrollment.Program.Name
-            || model.SemesterName != payment.Enrollment.Semester.Name
-        )
-        {
-            var (success, message) = await _enrollmentService.UpdateEnrollmentAsync(
-                payment.EnrollmentId,
-                model.ProgramId,
-                model.SemesterId,
-                model.EnrollmentDate,
-                model.SelectedCourses
-            );
-            if (!success)
-            {
-                ModelState.AddModelError("", message);
-                return View(model);
-            }
-        }
+        var amountPaid = courses.Sum(c => c.Fee * c.Credits);
 
         if (amountPaid != payment.Amount || model.PaymentMethod != payment.PaymentMethod)
         {

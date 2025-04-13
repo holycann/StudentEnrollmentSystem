@@ -1,3 +1,5 @@
+using StudentEnrollmentSystem.Models;
+
 namespace StudentEnrollmentSystem.Models.ViewModels;
 
 public class ProgramStudyViewModel
@@ -6,5 +8,5 @@ public class ProgramStudyViewModel
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public int DurationInYears { get; set; }
-    public virtual ICollection<CourseViewModel> Courses { get; set; } = new HashSet<CourseViewModel>();
+    public virtual ICollection<Course> Courses { get; set; } = new HashSet<Course>();
 }

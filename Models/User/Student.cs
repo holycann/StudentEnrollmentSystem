@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace StudentEnrollmentSystem.Models
 {
@@ -37,6 +38,7 @@ namespace StudentEnrollmentSystem.Models
         public string? BankName { get; set; }
 
         // Relasi dengan Enrollment
+        [JsonIgnore]
         public virtual ICollection<Enrollment> Enrollments { get; set; } =
             new HashSet<Enrollment>();
         public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();

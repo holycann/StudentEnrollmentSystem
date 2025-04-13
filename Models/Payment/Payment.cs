@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using StudentEnrollmentSystem.Models.Enums;
 
 namespace StudentEnrollmentSystem.Models
 {
@@ -9,16 +10,16 @@ namespace StudentEnrollmentSystem.Models
         public int Id { get; set; }
 
         [Required]
-        public string StudentId { get; set; } = string.Empty; // Foreign Key ke Student
+        public string StudentId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(StudentId))]
         public virtual Student Student { get; set; } = null!;
 
         [Required]
-        public int EnrollmentId { get; set; } // Foreign Key ke Enrollment
+        public int SemesterId { get; set; }
 
-        [ForeignKey(nameof(EnrollmentId))]
-        public virtual Enrollment Enrollment { get; set; } = null!;
+        [ForeignKey(nameof(SemesterId))]
+        public virtual Semester Semester { get; set; } = null!;
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
@@ -26,11 +27,11 @@ namespace StudentEnrollmentSystem.Models
         public decimal Amount { get; set; }
 
         [Required]
-        public Enums.PaymentStatus Status { get; set; }
+        public PaymentStatus Status { get; set; }
 
         [Required]
-        public Enums.PaymentMethod PaymentMethod { get; set; } // Pakai Enum, bukan string!
+        public PaymentMethod PaymentMethod { get; set; }
 
-        public DateTime? PaymentDate { get; set; } // nullable
+        public DateTime? PaymentDate { get; set; }
     }
 }
